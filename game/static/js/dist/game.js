@@ -285,7 +285,7 @@ class Player extends BallGameObject{
         this.speed *= 1.25;
 
         // particle effect
-        for (let i = 0; i < 10 + Math.random() * 5; i ++ ) {
+        for (let i = 0; i < 20 + Math.random() * 5; i ++ ) {
             let x = this.x;
             let y = this.y;
             let radius = this.radius * Math.random() * 0.1;
@@ -294,7 +294,7 @@ class Player extends BallGameObject{
             let vy = Math.sin(angle);
             let color = this.color;
             let speed = this.speed * 10;
-            let move_len = this.radius * Math.random() * 10;
+            let move_len = this.radius * Math.random() * 5;
             new Particle(this.playground, x, y, radius, vx, vy, color, speed, move_len);
         }
     }
@@ -438,10 +438,15 @@ class BallGamePlayground {
         
         // add enemies
         for (let i = 0; i < 5; i ++ ) {
-            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "blue", this.height * 0.15, false));
+            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, this.get_random_color(), this.height * 0.15, false));
         }
 
         this.start();
+    }
+
+    get_random_color(){
+        let colors = ["blue", "red", "pink", "grey", "green", "Cyan", "AntiqueWhite", "Azure"];
+        return colors[Math.floor(Math.random() * 8)];
     }
 
     start(){
