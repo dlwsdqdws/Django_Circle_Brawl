@@ -1,4 +1,4 @@
-class Game {
+class BallGame {
     constructor(id) {
         
     }
