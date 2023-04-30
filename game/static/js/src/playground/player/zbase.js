@@ -127,7 +127,7 @@ class Player extends BallGameObject{
 
     update(){
         this.spent_time += this.timedelta / 1000;
-        if (!this.is_me && this.spent_time > 5 && Math.random() * 180 < 1){
+        if (!this.is_me && this.spent_time > 5 && Math.random() * 300 < 1){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             this.shoot_fireball(player.x, player.y);
         }
