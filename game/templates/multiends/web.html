@@ -1,8 +1,8 @@
 {% load static %}
 
 <head>
-    <link rel="stylesheet" href="https://cdn.acwing.com/static/jquery-ui-dist/jquery-ui.min.css">
-    <script src="https://cdn.acwing.com/static/jquery/js/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/game.css' %}">
     <script src="{% static 'js/dist/game.js' %}"></script>
 </head>
@@ -11,8 +11,7 @@
     <div id="ac_game_12345678"></div>
     <script>
         $(document).ready(function(){
-            let ac_game = AcGame("ac_game_12345678");
+            let ac_game = new AcGame("ac_game_12345678");
         });
     </script>
 </body>
-
