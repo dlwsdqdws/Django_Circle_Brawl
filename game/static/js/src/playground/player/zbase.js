@@ -11,6 +11,10 @@ class Player extends BallGameObject{
         this.move_length = 0;  //remained distance to move
         this.color = color;
         this.speed = speed;
+        this.damage_vx = 0;
+        this.damage_vy = 0;
+        this.damage_speed = 0;
+        this.friction = 0.9;
         this.radius = radius;
         this.is_me = is_me;
         // float computing
@@ -68,6 +72,7 @@ class Player extends BallGameObject{
         // speed should not be binded with px
         let speed = this.playground.height * 0.5;
         let move_length = this.playground.height * 1.0;
+        // deduct 20% player's energy
         let damage = this.playground.height * 0.01;
         new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, damage);
     }
@@ -86,24 +91,51 @@ class Player extends BallGameObject{
         this.vy = Math.sin(angle);
     }
 
+    is_attacked(angle, damage){
+        this.radius -= damage;
+        if (this.radius < 10) {
+            // dead
+            this.destroy();
+            return false;
+        }
+
+        // repel
+        this.damage_vx = Math.cos(angle);
+        this.damage_vy = Math.sin(angle);
+        this.damage_speed = damage * 100;
+
+        // Movement speed is halved when hit
+        this.speed *= 0.5;
+    }
+
     update(){
-        if (this.move_length < this.eps) {
-            this.move_length = 0;
+        if (this.damage_speed > this.eps){
             this.vx = 0;
             this.vy = 0;
-
-            if(!this.is_me){
-                // AI enemy : never stop
-                let tx = Math.random() * this.playground.width;
-                let ty = Math.random() * this.playground.height;
-                this.move_to(tx, ty);
-            }
+            this.move_length = 0;
+            this.x += this.damage_vx * this.damage_speed * this.timedelta / 1000;
+            this.y += this.damage_vy * this.damage_speed * this.timedelta / 1000;
+            this.damage_speed *= this.friction;
         }
         else{
-            let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
-            this.x += this.vx * moved;
-            this.y += this.vy * moved;
-            this.move_length -= moved;
+            if (this.move_length < this.eps) {
+                this.move_length = 0;
+                this.vx = 0;
+                this.vy = 0;
+
+                if(!this.is_me){
+                    // AI enemy : never stop
+                    let tx = Math.random() * this.playground.width;
+                    let ty = Math.random() * this.playground.height;
+                    this.move_to(tx, ty);
+                }
+            }
+            else{
+                let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
+                this.x += this.vx * moved;
+                this.y += this.vy * moved;
+                this.move_length -= moved;
+            }
         }
         this.render();
     }
@@ -116,6 +148,10 @@ class Player extends BallGameObject{
     }
 
     on_destroy(){
-
+        for (let i = 0; i < this.playground.players.length; i ++ ) {
+            if (this.playground.players[i] === this) {
+                this.playground.players.splice(i, 1);
+            }
+        }
     }
 }
