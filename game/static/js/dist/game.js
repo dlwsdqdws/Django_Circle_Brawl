@@ -320,14 +320,14 @@ class FireBall extends BallGameObject{
             this.x += this.vx * moved;
             this.y += this.vy * moved;
             this.move_length -= moved;
-        }
 
-        // collision detection
-        for (let i = 0; i < this.playground.players.length; i ++ ) {
-            let player = this.playground.players[i];
-            if (this.player !== player && this.is_collision(player)) {
-                // cannot hurt myself
-                this.attack(player);
+            // collision detection
+            for (let i = 0; i < this.playground.players.length; i ++ ) {
+                let player = this.playground.players[i];
+                if (this.player !== player && this.is_collision(player)) {
+                    // cannot hurt myself
+                    this.attack(player);
+                }
             }
         }
 
@@ -351,8 +351,8 @@ class FireBall extends BallGameObject{
 
     attack(player){
         let angle = Math.atan2(player.y - this.y, player.x - this.x);
-        this.player.is_attacked(angle, this.damage);
-        destroy();
+        player.is_attacked(angle, this.damage);
+        this.destroy();
     }
 
     render(){

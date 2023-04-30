@@ -62,8 +62,8 @@ class FireBall extends BallGameObject{
 
     attack(player){
         let angle = Math.atan2(player.y - this.y, player.x - this.x);
-        this.player.is_attacked(angle, this.damage);
-        destroy();
+        player.is_attacked(angle, this.damage);
+        this.destroy();
     }
 
     render(){
