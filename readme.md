@@ -1,4 +1,4 @@
-# Circle Brawl Based onn Django
+# Circle Brawl Based on Django and jQuery
 
 ## Contents
 ### Single Player
