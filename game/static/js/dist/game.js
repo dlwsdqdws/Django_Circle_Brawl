@@ -31,7 +31,8 @@ class BallGameMenu{
     add_listening_events(){
         let outer = this;
         this.$single_mode.click(function(){
-            console.log("click single");
+            outer.hide();
+            outer.root.playground.show();
         });
         this.$multi_mode.click(function(){
             console.log("click multi");
