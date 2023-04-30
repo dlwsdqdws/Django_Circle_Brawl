@@ -147,6 +147,8 @@ class Player extends BallGameObject{
         this.is_me = is_me;
         // float computing
         this.eps = 0.1;
+
+        this.cur_skill = null;
     }
 
     start(){
@@ -167,7 +169,34 @@ class Player extends BallGameObject{
             if (e.which === 3) {
                 outer.move_to(e.clientX, e.clientY);
             }
+            else if (e.which === 1) {
+                if (outer.cur_skill === "fireball") {
+                    outer.shoot_fireball(e.clientX, e.clientY);
+                }
+                outer.cur_skill = null;
+            }
         });
+
+        $(window).keydown(function(e) {
+            if (e.which === 81) {
+                // keycode 81 = 'Q' in keyboard
+                outer.cur_skill = "fireball";
+                return false;
+            }
+        });
+    }
+
+    shoot_fireball(tx, ty){
+        let x = this.x, y = this.y;
+        let radius = this.playground.height * 0.01;
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        let vx = Math.cos(angle), vy = Math.sin(angle);
+        let color = "orange";
+        // speed should not be binded with px
+        let speed = this.playground.height * 0.5;
+        let move_length = this.playground.height * 1.0;
+        let damage = this.playground.height * 0.01;
+        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, damage);
     }
 
     get_dist (x1, y1, x2, y2) {
@@ -208,6 +237,51 @@ class Player extends BallGameObject{
 
     on_destroy(){
 
+    }
+}
+class FireBall extends BallGameObject{
+    constructor(playground, player, x, y, radius, vx, vy, color, speed, move_length, damage) {
+        super();
+
+        this.playground = playground;
+        this.ctx = this.playground.game_map.ctx;
+        this.player = player;
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.radius = radius;
+        this.color = color;
+        this.speed = speed;
+        this.move_length = move_length;
+        this.damage = damage;
+        this.eps = 0.1;
+    }
+
+    start(){
+
+    }
+
+    update(){
+        if (this.move_length < this.eps) {
+            this.destroy();
+            return false;
+        }
+        else{
+            let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
+            this.x += this.vx * moved;
+            this.y += this.vy * moved;
+            this.move_length -= moved;
+        }
+
+        this.render();
+    }
+
+    render(){
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+        this.ctx.fillStyle = this.color;
+        this.ctx.fill();
     }
 }
 class BallGamePlayground {

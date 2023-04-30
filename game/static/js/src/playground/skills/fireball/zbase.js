@@ -12,7 +12,7 @@ class FireBall extends BallGameObject{
         this.radius = radius;
         this.color = color;
         this.speed = speed;
-        this.move_length = move.length;
+        this.move_length = move_length;
         this.damage = damage;
         this.eps = 0.1;
     }
@@ -32,11 +32,13 @@ class FireBall extends BallGameObject{
             this.y += this.vy * moved;
             this.move_length -= moved;
         }
+
+        this.render();
     }
 
     render(){
         this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math * Pi, false);
+        this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
     }
