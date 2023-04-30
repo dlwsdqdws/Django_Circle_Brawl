@@ -1,3 +1,3 @@
 class Game{
-    constructor(id)
+    constructor(id) {}
 }
