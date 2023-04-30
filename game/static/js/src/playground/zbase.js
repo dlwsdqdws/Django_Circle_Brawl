@@ -9,6 +9,7 @@ class BallGamePlayground {
         this.root.$ball_game.append(this.$playground);
         this.width = this.$playground.width();
         this.height = this.$playground.height();
+        this.game_map = new GameMap(this);
 
         this.start();
     }

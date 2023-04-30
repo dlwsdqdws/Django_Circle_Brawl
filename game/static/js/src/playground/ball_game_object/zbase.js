@@ -35,8 +35,8 @@ class BallGameObject{
 let last_timestamp;
 let Ball_Game_Animation = function(timestamp) {
     
-    for (let i = 0; i < Ball_GAME_OBJECTS.length; i ++ ) {
-        let obj = Ball_GAME_OBJECTS[i];
+    for (let i = 0; i < Ball_Game_Objects.length; i ++ ) {
+        let obj = Ball_Game_Objects[i];
         if (!obj.has_called_start) { 
             obj.start();
             obj.has_called_start = true;
@@ -48,7 +48,7 @@ let Ball_Game_Animation = function(timestamp) {
     }
 
 	last_timestamp = timestamp;
-    requestAnimationFrame(Ball_GAME_ANIMATION);
+    requestAnimationFrame(Ball_Game_Animation);
 }
 
 
