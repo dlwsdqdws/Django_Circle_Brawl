@@ -21,6 +21,9 @@ class Player extends BallGameObject{
         this.eps = 0.1;
 
         this.cur_skill = null;
+
+        // AI attack coll down time
+        this.spent_time = 0;
     }
 
     start(){
@@ -123,7 +126,13 @@ class Player extends BallGameObject{
     }
 
     update(){
-        if (this.damage_speed > this.eps){
+        this.spent_time += this.timedelta / 1000;
+        if (!this.is_me && this.spent_time > 5 && Math.random() * 180 < 1){
+            let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
+            this.shoot_fireball(player.x, player.y);
+        }
+
+        if (this.damage_speed > 10){
             this.vx = 0;
             this.vy = 0;
             this.move_length = 0;
