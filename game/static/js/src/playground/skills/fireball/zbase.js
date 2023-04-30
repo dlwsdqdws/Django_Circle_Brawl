@@ -31,14 +31,14 @@ class FireBall extends BallGameObject{
             this.x += this.vx * moved;
             this.y += this.vy * moved;
             this.move_length -= moved;
-        }
 
-        // collision detection
-        for (let i = 0; i < this.playground.players.length; i ++ ) {
-            let player = this.playground.players[i];
-            if (this.player !== player && this.is_collision(player)) {
-                // cannot hurt myself
-                this.attack(player);
+            // collision detection
+            for (let i = 0; i < this.playground.players.length; i ++ ) {
+                let player = this.playground.players[i];
+                if (this.player !== player && this.is_collision(player)) {
+                    // cannot hurt myself
+                    this.attack(player);
+                }
             }
         }
 
