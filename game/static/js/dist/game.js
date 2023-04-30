@@ -53,9 +53,11 @@ class BallGameMenu{
 class BallGamePlayground {
     constructor(root){
         this.root = root;
-        this.$playground = $(`<div>playground</div>`);
+        this.$playground = $(`<div class="ball-game-playground">
 
-        this.hide();
+            </div>`);
+
+        // this.hide();
         this.root.$ball_game.append(this.$playground);
 
         this.start();
@@ -80,11 +82,11 @@ class BallGamePlayground {
     }
 }
 
-class BallGame {
+export class BallGame {
     constructor(id) {
         this.is = id;
         this.$ball_game = $('#' + id);
-        this.menu = new BallGameMenu(this);
+        // this.menu = new BallGameMenu(this);
         this.playground = new BallGamePlayground(this);
     }
 
