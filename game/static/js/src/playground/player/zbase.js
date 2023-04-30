@@ -105,7 +105,7 @@ class Player extends BallGameObject{
         this.damage_speed = damage * 100;
 
         // Movement speed is halved when hit
-        this.speed *= 0.5;
+        this.speed *= 1.25;
     }
 
     update(){
