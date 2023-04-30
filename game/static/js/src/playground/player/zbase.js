@@ -92,6 +92,20 @@ class Player extends BallGameObject{
     }
 
     is_attacked(angle, damage){
+        // particle effect
+        for (let i = 0; i < 20 + Math.random() * 5; i ++ ) {
+            let x = this.x;
+            let y = this.y;
+            let radius = this.radius * Math.random() * 0.1;
+            let angle = 2 * Math.PI * Math.random();
+            let vx = Math.cos(angle);
+            let vy = Math.sin(angle);
+            let color = this.color;
+            let speed = this.speed * 10;
+            let move_len = this.radius * Math.random() * 5;
+            new Particle(this.playground, x, y, radius, vx, vy, color, speed, move_len);
+        }
+
         this.radius -= damage;
         if (this.radius < 10) {
             // dead
@@ -106,20 +120,6 @@ class Player extends BallGameObject{
 
         // Movement speed is halved when hit
         this.speed *= 1.25;
-
-        // particle effect
-        for (let i = 0; i < 20 + Math.random() * 5; i ++ ) {
-            let x = this.x;
-            let y = this.y;
-            let radius = this.radius * Math.random() * 0.1;
-            let angle = 2 * Math.PI * Math.random();
-            let vx = Math.cos(angle);
-            let vy = Math.sin(angle);
-            let color = this.color;
-            let speed = this.speed * 10;
-            let move_len = this.radius * Math.random() * 5;
-            new Particle(this.playground, x, y, radius, vx, vy, color, speed, move_len);
-        }
     }
 
     update(){
