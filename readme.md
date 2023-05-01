@@ -6,6 +6,7 @@ HomePage:
 <p align="center"><img src="static/img/game.png" alt="home" width="500" /></p>
 
 ### Directory Structure
+```
 .
 ├── app
 │   ├── settings.py
@@ -42,6 +43,7 @@ HomePage:
 ├── scripts : automatically generate js/dist
 │   └── compress_game_js.sh
 └── static : store images used in readme.md
+```
 
 ### URL Routing
 Enter Url  -> app.urls -> game.urls -> game.views.index -> Show Page
