@@ -1,8 +1,50 @@
 # Circle Brawl Based on Django and jQuery
 
 ## Contents
+### Pages
 HomePage:
 <p align="center"><img src="static/img/game.png" alt="home" width="500" /></p>
+
+### Directory Structure
+.
+├── app
+│   ├── settings.py
+│   └── urls.py
+├── db.sqlite3
+├── game
+│   ├── migrations
+│   ├── models : Manage database
+│   ├── static
+│   │   ├── css : Manage the styles of game objects, such as position, width, color, background, font size, etc.
+│   │   ├── image : Manage the logic of game objects, such as object creation and destruction, event functions, movement, color change, etc.
+│   │   └── js
+│   │       ├── dist
+│   │       └── src
+│   │           ├── menu
+│   │           └── playground
+│   │               ├── ball_game_object
+│   │               ├── game_map
+│   │               ├── particle
+│   │               ├── player
+│   │               ├── skills
+│   │               └── fireball
+│   ├── templates : Manage html files
+│   │   └── multiends
+│   │       └── web.html
+│   ├── urls : Manage routings - correspondence between links and functions
+│   │   ├── menu
+│   │   ├── playground
+│   │   └── settings
+│   └── views : Manage HTTP functions
+│       ├── menu
+│       ├── playground
+│       └── settings
+├── scripts : automatically generate js/dist
+│   └── compress_game_js.sh
+└── static : store images used in readme.md
+
+### URL Routing
+Enter Url  -> app.urls -> game.urls -> game.views.index -> Show Page
 
 ## Operations
 1. Right click mouse to move;
