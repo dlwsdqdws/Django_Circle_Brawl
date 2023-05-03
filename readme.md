@@ -3,9 +3,9 @@
 ## Contents
 ### Pages
 HomePage:
-<p align="center"><img src="statics/img/game.png" alt="home" width="500" /></p>
+<p align="center"><img src="showpic/img/game.png" alt="home" width="500" /></p>
 Login:
-<p align="center"><img src="statics/img/login_page.png" alt="home" width="500" /></p>
+<p align="center"><img src="showpic/img/login_page.png" alt="home" width="500" /></p>
 
 ### Directory Structure
 ```
@@ -13,7 +13,6 @@ Login:
 ├── app
 │   ├── settings.py
 │   └── urls.py
-├── db.sqlite3
 ├── game
 │   ├── migrations
 │   ├── models : Manage database
@@ -25,6 +24,7 @@ Login:
 │   │       ├── dist
 │   │       └── src
 │   │           ├── menu
+│   │           ├── settings : manage login, register page
 │   │           └── playground
 │   │               ├── ball_game_object
 │   │               ├── game_map
@@ -44,8 +44,10 @@ Login:
 │       ├── playground
 │       └── settings
 ├── scripts : automatically generate js/dist
-│   └── compress_game_js.sh
-└── static : store images used in readme.md
+│   ├── compress_game_js.sh : package /js/src files
+│   └── uwsgi.ini
+├── static : store all static files used in web.html
+└── showpic : store images used in readme.md
 ```
 
 ### URL Routing
