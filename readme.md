@@ -4,6 +4,8 @@
 ### Pages
 HomePage:
 <p align="center"><img src="statics/img/game.png" alt="home" width="500" /></p>
+Login:
+<p align="center"><img src="statics/img/login_page.png" alt="home" width="500" /></p>
 
 ### Directory Structure
 ```
