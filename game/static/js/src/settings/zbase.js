@@ -95,6 +95,62 @@ class Settings {
 
     start(){
         this.getinfo();
+        this.add_listening_events();
+    }
+
+    add_listening_events(){
+        this.add_listening_events_login();
+        this.add_listening_events_register();
+    }
+
+    add_listening_events_login(){
+        // jump to register page
+        let outer = this;
+        this.$login_register.click(function() {
+            outer.register();
+        });
+        this.$login_submit.click(function() {
+            outer.login_on_remote();
+        });
+    }
+
+    add_listening_events_register(){
+        // jump to login page
+        let outer = this;
+        this.$register_login.click(function() {
+            outer.login();
+        });
+    }
+
+    login_on_remote(){
+        // login via server
+        let outer = this;
+        let username = this.$login_username.val();
+        let password = this.$login_password.val();
+        this.$login_error_message.empty();
+        $.ajax({
+            url: "https://app4415.acapp.acwing.com.cn/settings/login/",
+            type: "GET",
+            data: {
+                username: username,
+                password: password,
+            },
+            success: function(resp){
+                console.log(resp);
+                if (resp.result === "success"){
+                    location.reload();
+                }
+                else{
+                    outer.$login_error_message.html(resp.result);
+                }
+            }
+        });
+    }
+
+    register_on_remote(){
+    }
+
+    logout_on_remote(){
     }
 
     register(){

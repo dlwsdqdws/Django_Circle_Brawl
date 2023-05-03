@@ -581,9 +581,20 @@ class Settings {
 
 
         this.$login = this.$settings.find(".ball-game-settings-login");
+        this.$login_username = this.$login.find(".ball-game-settings-username input");
+        this.$login_password = this.$login.find(".ball-game-settings-password input");
+        this.$login_submit = this.$login.find(".ball-game-settings-submit button");
+        this.$login_error_message = this.$login.find(".ball-game-settings-error-message");
+        this.$login_register = this.$login.find(".ball-game-settings-option");
         this.$login.hide();
 
         this.$register = this.$settings.find(".ball-game-settings-register");
+        this.$register_username = this.$register.find(".ball-game-settings-username input");
+        this.$register_password = this.$register.find(".ball-game-settings-password-first input");
+        this.$register_password_confirm = this.$register.find(".ball-game-settings-password-second input");
+        this.$register_submit = this.$register.find(".ball-game-settings-submit button");
+        this.$register_error_message = this.$register.find(".ball-game-settings-error-message");
+        this.$register_login = this.$register.find(".ball-game-settings-option");
         this.$register.hide();
 
         this.root.$ball_game.append(this.$settings);
@@ -592,6 +603,62 @@ class Settings {
 
     start(){
         this.getinfo();
+        this.add_listening_events();
+    }
+
+    add_listening_events(){
+        this.add_listening_events_login();
+        this.add_listening_events_register();
+    }
+
+    add_listening_events_login(){
+        // jump to register page
+        let outer = this;
+        this.$login_register.click(function() {
+            outer.register();
+        });
+        this.$login_submit.click(function() {
+            outer.login_on_remote();
+        });
+    }
+
+    add_listening_events_register(){
+        // jump to login page
+        let outer = this;
+        this.$register_login.click(function() {
+            outer.login();
+        });
+    }
+
+    login_on_remote(){
+        // login via server
+        let outer = this;
+        let username = this.$login_username.val();
+        let password = this.$login_password.val();
+        this.$login_error_message.empty();
+        $.ajax({
+            url: "https://app4415.acapp.acwing.com.cn/settings/login/",
+            type: "GET",
+            data: {
+                username: username,
+                password: password,
+            },
+            success: function(resp){
+                console.log(resp);
+                if (resp.result === "success"){
+                    location.reload();
+                }
+                else{
+                    outer.$login_error_message.html(resp.result);
+                }
+            }
+        });
+    }
+
+    register_on_remote(){
+    }
+
+    logout_on_remote(){
     }
 
     register(){
