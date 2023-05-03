@@ -30,8 +30,8 @@ Login:
 │   │               ├── game_map
 │   │               ├── particle
 │   │               ├── player
-│   │               ├── skills
-│   │               └── fireball
+│   │               └── skills
+│   │                   └── fireball
 │   ├── templates : Manage html files
 │   │   └── multiends
 │   │       └── web.html
@@ -46,7 +46,7 @@ Login:
 ├── scripts : automatically generate js/dist
 │   ├── compress_game_js.sh : package /js/src files
 │   └── uwsgi.ini
-├── static : store all static files used in web.html
+├── static : store all static files used in templates/multiends/web.html
 └── showpic : store images used in readme.md
 ```
 
