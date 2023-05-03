@@ -89,6 +89,8 @@ class Settings {
         this.$register_login = this.$register.find(".ball-game-settings-option");
         this.$register.hide();
 
+        this.$acw_login = this.$settings.find('.ball-game-settings-logo img'); 
+
         this.root.$ball_game.append(this.$settings);
         this.start();
     }
@@ -99,8 +101,27 @@ class Settings {
     }
 
     add_listening_events(){
+        let outer = this;
+
         this.add_listening_events_login();
         this.add_listening_events_register();
+
+        this.$acw_login.click(function() {
+            outer.acw_login();
+        });
+    }
+
+    acw_login(){
+        $.ajax({
+            url: "https://app4415.acapp.acwing.com.cn/settings/acw/web/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                console.log(resp);
+                if (resp.result === "success") {
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
+        });
     }
 
     add_listening_events_login(){
