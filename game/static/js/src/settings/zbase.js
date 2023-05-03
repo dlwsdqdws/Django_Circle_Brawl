@@ -96,8 +96,13 @@ class Settings {
     }
 
     start(){
-        this.getinfo();
-        this.add_listening_events();
+        if (this.platform === "ACAPP"){
+            this.getinfo_app();
+        }
+        else{
+            this.getinfo_web();
+            this.add_listening_events();
+        }
     }
 
     add_listening_events(){
@@ -227,7 +232,34 @@ class Settings {
         this.$login.show();
     }
 
-    getinfo() {
+    app_login(appid, redirect_uri, scope, state) {
+        let outer = this;
+        this.root.AcWingOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
+            console.log(resp);
+            if (resp.result === "success"){
+                outer.username = resp.username;
+                outer.photo = resp.photo;
+                // hide settings page, show menu page
+                outer.hide();
+                outer.root.menu.show();
+            }
+        });
+    }
+
+    getinfo_app(){
+        let outer = this;
+        $.ajax({
+            url: "https://app4415.acapp.acwing.com.cn/settings/acw/app/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                if (resp.result === "success") {
+                    outer.app_login(resp.appid, resp.redirect_uri, resp.scope, resp.state);
+                }
+            }
+        });
+    }
+
+    getinfo_web() {
         let outer = this;
 
         $.ajax({
