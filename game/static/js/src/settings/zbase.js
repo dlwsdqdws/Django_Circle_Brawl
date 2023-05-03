@@ -24,13 +24,11 @@ class Settings {
                         </div>
                         <div class="ball-game-settings-submit">
                             <div class="ball-game-settings-item">
-                                <button>Login</button>
+                                <button>Submit</button>
                             </div>
                         </div>
                         <div class="ball-game-settings-error-message"></div>
-                        <div class="ball-game-settings-option">
-                            Register
-                        </div>
+                        <div class="ball-game-settings-option">Register</div>
                         <br>
                         <div class="ball-game-settings-logo">
                             <img width="30" src="https://app4415.acapp.acwing.com.cn/static/image/settings/logo.png">
@@ -39,6 +37,35 @@ class Settings {
                         </div>
                     </div>
                     <div class="ball-game-settings-register">
+                        <div class="ball-game-settings-title">Register</div>
+                        <div class="ball-game-settings-username">
+                            <div class="ball-game-settings-item">
+                                <input type="text" placeholder="Please Enter Your Username">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-password ball-game-settings-password-first">
+                            <div class="ball-game-settings-item">
+                                <input type="password" placeholder="Please Enter Your Password">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-password ball-game-settings-password-second">
+                            <div class="ball-game-settings-item">
+                                <input type="password" placeholder="Please Enter Your Password Again">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-submit">
+                            <div class="ball-game-settings-item">
+                                <button>Submit</button>
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-error-message"></div>
+                        <div class="ball-game-settings-option">Login</div>
+                        <br>
+                        <div class="ball-game-settings-logo">
+                            <img width="30" src="https://app4415.acapp.acwing.com.cn/static/image/settings/logo.png">
+                            <br>
+                            <div>Acwing Login</div>
+                        </div>
                     </div>
                 </div>
             `
@@ -46,9 +73,20 @@ class Settings {
 
 
         this.$login = this.$settings.find(".ball-game-settings-login");
+        this.$login_username = this.$login.find(".ball-game-settings-username input");
+        this.$login_password = this.$login.find(".ball-game-settings-password input");
+        this.$login_submit = this.$login.find(".ball-game-settings-submit button");
+        this.$login_error_message = this.$login.find(".ball-game-settings-error-message");
+        this.$login_register = this.$login.find(".ball-game-settings-option");
         this.$login.hide();
 
         this.$register = this.$settings.find(".ball-game-settings-register");
+        this.$register_username = this.$register.find(".ball-game-settings-username input");
+        this.$register_password = this.$register.find(".ball-game-settings-password-first input");
+        this.$register_password_confirm = this.$register.find(".ball-game-settings-password-second input");
+        this.$register_submit = this.$register.find(".ball-game-settings-submit button");
+        this.$register_error_message = this.$register.find(".ball-game-settings-error-message");
+        this.$register_login = this.$register.find(".ball-game-settings-option");
         this.$register.hide();
 
         this.root.$ball_game.append(this.$settings);

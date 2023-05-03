@@ -24,13 +24,11 @@ class Settings {
                         </div>
                         <div class="ball-game-settings-submit">
                             <div class="ball-game-settings-item">
-                                <button>Login</button>
+                                <button>Submit</button>
                             </div>
                         </div>
                         <div class="ball-game-settings-error-message"></div>
-                        <div class="ball-game-settings-option">
-                            Register
-                        </div>
+                        <div class="ball-game-settings-option">Register</div>
                         <br>
                         <div class="ball-game-settings-logo">
                             <img width="30" src="https://app4415.acapp.acwing.com.cn/static/image/settings/logo.png">
@@ -39,6 +37,35 @@ class Settings {
                         </div>
                     </div>
                     <div class="ball-game-settings-register">
+                        <div class="ball-game-settings-title">Register</div>
+                        <div class="ball-game-settings-username">
+                            <div class="ball-game-settings-item">
+                                <input type="text" placeholder="Please Enter Your Username">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-password ball-game-settings-password-first">
+                            <div class="ball-game-settings-item">
+                                <input type="password" placeholder="Please Enter Your Password">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-password ball-game-settings-password-second">
+                            <div class="ball-game-settings-item">
+                                <input type="password" placeholder="Please Enter Your Password Again">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-submit">
+                            <div class="ball-game-settings-item">
+                                <button>Submit</button>
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-error-message"></div>
+                        <div class="ball-game-settings-option">Login</div>
+                        <br>
+                        <div class="ball-game-settings-logo">
+                            <img width="30" src="https://app4415.acapp.acwing.com.cn/static/image/settings/logo.png">
+                            <br>
+                            <div>Acwing Login</div>
+                        </div>
                     </div>
                 </div>
             `
