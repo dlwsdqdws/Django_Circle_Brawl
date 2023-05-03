@@ -38,7 +38,9 @@ class BallGameMenu{
         this.$multi_mode.click(function(){
             console.log("click multi");
         });
-        this.$settings.click(function(){console.log("click settings")});
+        this.$settings.click(function(){
+            outer.root.settings.logout_on_remote();
+        });
     }
 
     show(){
