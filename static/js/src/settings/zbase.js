@@ -27,9 +27,15 @@ class Settings {
                                 <button>Login</button>
                             </div>
                         </div>
-                        <div class="ball-game-settings-error-message">Username or password not correct.</div>
+                        <div class="ball-game-settings-error-message"></div>
                         <div class="ball-game-settings-option">
                             Register
+                        </div>
+                        <br>
+                        <div class="ball-game-settings-logo">
+                            <img width="30" src="https://app4415.acapp.acwing.com.cn/static/image/settings/logo.png">
+                            <br>
+                            <div>Acwing Login</div>
                         </div>
                     </div>
                     <div class="ball-game-settings-register">
