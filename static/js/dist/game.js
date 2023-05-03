@@ -514,6 +514,46 @@ class Settings {
 
         this.username = "";
         this.photo = "";
+
+        this.$settings = $(
+            `
+                <div class="ball-game-settings">
+                    <div class="ball-game-settings-login">
+                        <div class="ball-game-settings-title">Login</div>
+                        <div class="ball-game-settings-username">
+                            <div class="ball-game-settings-item">
+                                <input type="text" placeholder="Please Enter Your Username">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-password">
+                            <div class="ball-game-settings-item">
+                                <input type="password" placeholder="Please Enter Your Password">
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-submit">
+                            <div class="ball-game-settings-item">
+                                <button>Login</button>
+                            </div>
+                        </div>
+                        <div class="ball-game-settings-error-message">Username or password not correct.</div>
+                        <div class="ball-game-settings-option">
+                            Register
+                        </div>
+                    </div>
+                    <div class="ball-game-settings-register">
+                    </div>
+                </div>
+            `
+        );
+
+
+        this.$login = this.$settings.find(".ball-game-settings-login");
+        this.$login.hide();
+
+        this.$register = this.$settings.find(".ball-game-settings-register");
+        this.$register.hide();
+
+        this.root.$ball_game.append(this.$settings);
         this.start();
     }
 
@@ -522,11 +562,15 @@ class Settings {
     }
 
     register(){
-
+        // register page
+        this.$login.hide();
+        this.$register.show();
     }
 
     login(){
-
+        // login page
+        this.$register.hide();
+        this.$login.show();
     }
 
     getinfo() {
@@ -554,11 +598,11 @@ class Settings {
     }
 
     hide(){
-
+        this.$settings.hide();
     }
 
     show(){
-
+        this.$settings.show();
     }
 }
 export class BallGame {
