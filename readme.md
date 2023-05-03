@@ -13,6 +13,7 @@ Login:
 ├── app
 │   ├── settings.py
 │   └── urls.py
+├── db.sqlite3
 ├── game
 │   ├── migrations
 │   ├── models : Manage database
@@ -43,6 +44,10 @@ Login:
 │       ├── menu
 │       ├── playground
 │       └── settings
+│           ├── getinfo
+│           ├── login
+│           ├── logout
+│           └── register
 ├── scripts : automatically generate js/dist
 │   ├── compress_game_js.sh : package /js/src files
 │   └── uwsgi.ini
