@@ -9,17 +9,16 @@
 .ball-game-menu-field{
    width: 20vw;
    position: relative;
-   top: 40vh;
-   left: 19vh;
+   top: 40%;
+   left: 19%;
 }
 
 .ball-game-menu-field-item{
-    height: 7vh;
+    height: 6vh;
     width: 18vw;
     color: white;
-    font-size: 6vh;
+    font-size: 4vh;
     font-style: italic;
-    padding: 2vh;
     margin: 1vh 0;
     cursor: pointer;
     text-align: center;
