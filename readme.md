@@ -15,6 +15,7 @@ HomePage:
 ├── game
 │   ├── migrations
 │   ├── models : Manage database
+│   │   └── players
 │   ├── static
 │   │   ├── css : Manage the styles of game objects, such as position, width, color, background, font size, etc.
 │   │   ├── image : Manage the logic of game objects, such as object creation and destruction, event functions, movement, color change, etc.

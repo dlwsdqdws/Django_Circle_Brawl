@@ -24,6 +24,11 @@ class Player extends BallGameObject{
 
         // AI attack coll down time
         this.spent_time = 0;
+
+		if(this.is_me){
+        	this.img = new Image();
+        	this.img.src = this.playground.root.settings.photo;
+		}
     }
 
     start(){
@@ -41,15 +46,17 @@ class Player extends BallGameObject{
     add_listening_events(){
         let outer = this;
         // disable default mouse right click event
-        // this.playground.game_map.$canvas.on("contextmenu", function() {
-        //     return false;
-        // });
-        this.playground.game_map.$canvas.on("mousedown", function(event){
-            if (event.button === 2){
-                event.preventDefault();
-                return false;
-            }
+        this.playground.game_map.$canvas.on("contextmenu", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         });
+        // this.playground.game_map.$canvas.on("mousedown", function(event){
+        //     if (event.button === 2){
+        //         event.preventDefault();
+        //         return false;
+        //     }
+        // });
         this.playground.game_map.$canvas.mousedown(function(e) {
             const rect = outer.ctx.canvas.getBoundingClientRect();
             // left-click:1 wheel:2 right-click:3
@@ -173,10 +180,21 @@ class Player extends BallGameObject{
     }
 
     render(){
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-        this.ctx.fillStyle = this.color;
-        this.ctx.fill();
+        if(this.is_me){
+			this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.stroke();
+            this.ctx.clip();
+            this.ctx.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+            this.ctx.restore();
+        }
+        else{
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+            this.ctx.fillStyle = this.color;
+            this.ctx.fill();
+        }
     }
 
     on_destroy(){
