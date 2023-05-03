@@ -47,7 +47,10 @@ Login:
 │           ├── getinfo
 │           ├── login
 │           ├── logout
-│           └── register
+│           ├── register
+│           └── third_party : include web-end and app-end
+│               ├── apply_code
+│               └── receive_code
 ├── scripts : automatically generate js/dist
 │   ├── compress_game_js.sh : package /js/src files
 │   └── uwsgi.ini

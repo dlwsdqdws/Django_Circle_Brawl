@@ -9,6 +9,7 @@ urlpatterns = [
     path("login/", signin, name="settings_login"),
     path("logout/", signout, name="settings_logout"),
     path("register/", register, name="settings_register"),
+    path("acw/", include("game.urls.settings.acw.index")),
 
 ]
 
