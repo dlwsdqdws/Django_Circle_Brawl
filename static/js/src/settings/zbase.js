@@ -120,6 +120,9 @@ class Settings {
         this.$register_login.click(function() {
             outer.login();
         });
+        this.$register_submit.click(function() {
+            outer.register_on_remote();
+        });
     }
 
     login_on_remote(){
@@ -148,6 +151,31 @@ class Settings {
     }
 
     register_on_remote(){
+        // register a user via server
+        let outer = this;
+        let username = this.$register_username.val();
+        let password = this.$register_password.val();
+        let password_confirm = this.$register_password_confirm.val();
+        this.$register_error_message.empty();
+
+        $.ajax({
+            url: "https://app4415.acapp.acwing.com.cn/settings/register/",
+            type: "GET",
+            data: {
+                username: username,
+                password: password,
+                password_confirm: password_confirm,
+            },
+            success: function(resp) {
+                console.log(resp);
+                if (resp.result === "success") {
+                    location.reload();
+                }
+                else{
+                    outer.$register_error_message.html(resp.result);
+                }
+            }
+        });
     }
 
     logout_on_remote(){
