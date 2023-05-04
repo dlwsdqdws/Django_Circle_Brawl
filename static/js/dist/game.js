@@ -33,10 +33,11 @@ class BallGameMenu{
         let outer = this;
         this.$single_mode.click(function(){
             outer.hide();
-            outer.root.playground.show();
+            outer.root.playground.show("single mode");
         });
         this.$multi_mode.click(function(){
-            console.log("click multi");
+            outer.hide();
+            outer.root.playground.show("multi mode");
         });
         this.$settings.click(function(){
             outer.root.settings.logout_on_remote();
@@ -187,7 +188,7 @@ class Particle extends BallGameObject {
     }
 }
 class Player extends BallGameObject{
-    constructor(playground, x, y, radius, color, speed, is_me){
+    constructor(playground, x, y, radius, color, speed, character, username, photo){
         super();
 
         this.playground = playground;
@@ -204,7 +205,9 @@ class Player extends BallGameObject{
         this.damage_speed = 0;
         this.friction = 0.9;
         this.radius = radius;
-        this.is_me = is_me;
+        this.character = character;
+        this.username = username;
+        this.photo = photo;
         // float computing
         this.eps = 0.01;
 
@@ -215,7 +218,7 @@ class Player extends BallGameObject{
 
         this.dead = false;
 
-		if(this.is_me){
+		if(this.character !== "robot"){
         	this.img = new Image();
         	this.img.src = this.playground.root.settings.photo;
 		}
@@ -223,7 +226,7 @@ class Player extends BallGameObject{
 
     start(){
         this.dead = false;
-        if(this.is_me){
+        if(this.character === "me"){
             // change position via mouse
             this.add_listening_events();
         }else{
@@ -339,7 +342,7 @@ class Player extends BallGameObject{
 
     update_move(){
         this.spent_time += this.timedelta / 1000;
-        if (!this.is_me && this.spent_time > 5 && Math.random() * 200 < 1){
+        if (this.character === "robot" && this.spent_time > 5 && Math.random() * 200 < 1){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             let tx = player.x + player.speed * this.vx * this.timedelta / 1000 * 0.2;
             let ty = player.y + player.speed * this.vy * this.timedelta / 1000 * 0.2;
@@ -360,7 +363,7 @@ class Player extends BallGameObject{
                 this.vx = 0;
                 this.vy = 0;
 
-                if(!this.is_me){
+                if(this.character === "robot"){
                     // AI enemy : never stop
                     let tx = Math.random() * this.playground.width / this.playground.scale;
                     let ty = Math.random() * this.playground.height / this.playground.scale;
@@ -379,7 +382,7 @@ class Player extends BallGameObject{
 
     render(){
         let scale = this.playground.scale;
-        if(this.is_me){
+        if(this.character !== "robot"){
 			this.ctx.save();
             this.ctx.beginPath();
             this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
@@ -522,22 +525,27 @@ class BallGamePlayground {
 
     }
 
-    show(){
+    show(mode){
         // show playground page
         this.$playground.show();
-        this.resize();
 
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
+        this.resize();
+
         this.players = []; 
        	
 		// add players
-        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.15, true));
+        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.15, "me", this.root.settings.username, this.root.settings.photo));
 
-        // add AI enemies
-        for (let i = 0; i < 5; i ++ ) {
-            this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, false));
+        if(mode === "single mode"){
+            // add AI enemies
+            for (let i = 0; i < 5; i ++ ) {
+                this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, "robot"));
+            }
+        }
+        else if(mode === "multi mode"){
         }
     }
 
