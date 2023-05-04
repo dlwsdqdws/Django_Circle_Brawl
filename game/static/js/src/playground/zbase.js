@@ -63,9 +63,9 @@ class BallGamePlayground {
         }
         else if(mode === "multi mode"){
             this.mps = new MultiPlayerSocket(this);
-
+            this.mps.uuid = this.players[0].uuid;
             this.mps.ws.onopen = function(){
-                outer.mps.send_create_player();
+                outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
             };
         }
     }

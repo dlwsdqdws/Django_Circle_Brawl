@@ -1,5 +1,6 @@
 class Player extends BallGameObject{
     constructor(playground, x, y, radius, color, speed, character, username, photo){
+        console.log(character, username, photo);
         super();
 
         this.playground = playground;
