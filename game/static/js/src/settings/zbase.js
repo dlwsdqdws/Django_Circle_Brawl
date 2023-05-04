@@ -121,7 +121,6 @@ class Settings {
             url: "https://app4415.acapp.acwing.com.cn/settings/acw/web/apply_code/",
             type: "GET",
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     window.location.replace(resp.apply_code_url);
                 }
@@ -165,7 +164,6 @@ class Settings {
                 password: password,
             },
             success: function(resp){
-                console.log(resp);
                 if (resp.result === "success"){
                     location.reload();
                 }
@@ -193,7 +191,6 @@ class Settings {
                 password_confirm: password_confirm,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 }
@@ -212,7 +209,6 @@ class Settings {
             url: "https://app4415.acapp.acwing.com.cn/settings/logout/",
             type: "GET",
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 }
@@ -235,7 +231,6 @@ class Settings {
     app_login(appid, redirect_uri, scope, state) {
         let outer = this;
         this.root.AcWingOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
-            console.log(resp);
             if (resp.result === "success"){
                 outer.username = resp.username;
                 outer.photo = resp.photo;
@@ -269,7 +264,6 @@ class Settings {
                 platform: outer.platform,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success"){
                     outer.username = resp.username;
                     outer.photo = resp.photo;
