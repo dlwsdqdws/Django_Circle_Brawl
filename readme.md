@@ -43,6 +43,10 @@ Login:
 │   ├── consumers : websocket views
 │   │   ├── chat
 │   │   └── multiplayer : Online multiplayer battles
+│   │       ├── create-player
+│   │       ├── move-to
+│   │       ├── shoot-fireball
+│   │       └── attack
 │   ├── urls : Manage routings - correspondence between links and functions
 │   │   ├── menu
 │   │   ├── playground

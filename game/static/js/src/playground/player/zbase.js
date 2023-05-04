@@ -41,7 +41,8 @@ class Player extends BallGameObject{
         if(this.character === "me"){
             // change position via mouse
             this.add_listening_events();
-        }else{
+        }
+        else if(this.character === "robot"){
             // AI enemy : randonmly move
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;
