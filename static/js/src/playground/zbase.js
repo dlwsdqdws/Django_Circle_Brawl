@@ -42,6 +42,7 @@ class BallGamePlayground {
 
     show(mode){
         let outer = this;
+        
         // show playground page
         this.$playground.show();
 
@@ -49,6 +50,8 @@ class BallGamePlayground {
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
         this.resize();
+
+        this.mode = mode;
 
         this.players = []; 
        	

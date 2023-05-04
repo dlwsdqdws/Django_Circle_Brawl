@@ -200,7 +200,6 @@ class Particle extends BallGameObject {
 }
 class Player extends BallGameObject{
     constructor(playground, x, y, radius, color, speed, character, username, photo){
-        console.log(character, username, photo);
         super();
 
         this.playground = playground;
@@ -268,7 +267,13 @@ class Player extends BallGameObject{
             const rect = outer.ctx.canvas.getBoundingClientRect();
             // left-click:1 wheel:2 right-click:3
             if (e.which === 3) {
-                outer.move_to((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
+                let tx = (e.clientX - rect.left) / outer.playground.scale;
+                let ty = (e.clientY - rect.top) / outer.playground.scale;
+                outer.move_to(tx, ty);
+                if (outer.playground.mode === "multi mode"){
+                    // broadcast postion
+                    outer.playground.mps.send_move_to(tx, ty);
+                }
             }
             else if (e.which === 1) {
                 if (outer.cur_skill === "fireball") {
@@ -520,6 +525,9 @@ class MultiPlayerSocket {
             if (event === "create_player") {
                 outer.receive_create_player(uuid, data.username, data.photo);
             }
+            else if(event === "move_to"){
+                outer.receive_move_to(uuid, data.tx, data.ty);
+            }
         };
     }
 
@@ -547,6 +555,32 @@ class MultiPlayerSocket {
         );
         player.uuid = uuid;
         this.playground.players.push(player);
+    }
+
+    send_move_to(tx, ty){
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': 'move_to',
+            'uuid': outer.uuid,
+            'tx': tx,
+            'ty': ty,
+        }));
+    }
+
+    get_player(uuid){
+        let players = this.playground.players;
+        for (let i = 0; i < players.length; i ++ ) {
+            let player = players[i];
+            if (player.uuid === uuid) return player;
+        }
+        return null;
+    }
+
+    receive_move_to(uuid, tx, ty) {
+        let player = this.get_player(uuid);
+        if (player) {
+            player.move_to(tx, ty);
+        }
     }
 }
 class BallGamePlayground {
@@ -593,6 +627,7 @@ class BallGamePlayground {
 
     show(mode){
         let outer = this;
+        
         // show playground page
         this.$playground.show();
 
@@ -600,6 +635,8 @@ class BallGamePlayground {
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
         this.resize();
+
+        this.mode = mode;
 
         this.players = []; 
        	
@@ -750,7 +787,6 @@ class Settings {
             url: "https://app4415.acapp.acwing.com.cn/settings/acw/web/apply_code/",
             type: "GET",
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     window.location.replace(resp.apply_code_url);
                 }
@@ -794,7 +830,6 @@ class Settings {
                 password: password,
             },
             success: function(resp){
-                console.log(resp);
                 if (resp.result === "success"){
                     location.reload();
                 }
@@ -822,7 +857,6 @@ class Settings {
                 password_confirm: password_confirm,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 }
@@ -835,18 +869,20 @@ class Settings {
 
     logout_on_remote(){
         // logout function only works on web-end
-        if (this.platform === "ACAPP") return false;
-
-        $.ajax({
-            url: "https://app4415.acapp.acwing.com.cn/settings/logout/",
-            type: "GET",
-            success: function(resp) {
-                console.log(resp);
-                if (resp.result === "success") {
-                    location.reload();
+        if (this.platform === "ACAPP") {
+            this.root.AcWingOS.api.window.close();
+        }
+        else{
+            $.ajax({
+                url: "https://app4415.acapp.acwing.com.cn/settings/logout/",
+                type: "GET",
+                success: function(resp) {
+                    if (resp.result === "success") {
+                        location.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     register(){
@@ -864,7 +900,6 @@ class Settings {
     app_login(appid, redirect_uri, scope, state) {
         let outer = this;
         this.root.AcWingOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
-            console.log(resp);
             if (resp.result === "success"){
                 outer.username = resp.username;
                 outer.photo = resp.photo;
@@ -898,7 +933,6 @@ class Settings {
                 platform: outer.platform,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success"){
                     outer.username = resp.username;
                     outer.photo = resp.photo;
