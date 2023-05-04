@@ -41,6 +41,7 @@ class BallGamePlayground {
     }
 
     show(mode){
+        let outer = this;
         // show playground page
         this.$playground.show();
 
@@ -61,6 +62,11 @@ class BallGamePlayground {
             }
         }
         else if(mode === "multi mode"){
+            this.mps = new MultiPlayerSocket(this);
+
+            this.mps.ws.onopen = function(){
+                outer.mps.send_create_player();
+            };
         }
     }
 

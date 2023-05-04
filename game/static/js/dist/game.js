@@ -483,6 +483,26 @@ class FireBall extends BallGameObject{
         this.ctx.fill();
     }
 }
+class MultiPlayerSocket {
+    constructor(playground) {
+        this.playground = playground;
+        this.ws = new WebSocket("wss://app4415.acapp.acwing.com.cn/wss/multiplayer/");
+        this.start();
+    }
+
+    start(){
+
+    }
+
+    send_create_player(){
+        this.ws.send(JSON.stringify({
+            'message': 'hello app server',
+        }));
+    }
+
+    receive_create_player(){
+    }
+}
 class BallGamePlayground {
     constructor(root){
         this.root = root;
@@ -526,6 +546,7 @@ class BallGamePlayground {
     }
 
     show(mode){
+        let outer = this;
         // show playground page
         this.$playground.show();
 
@@ -546,6 +567,11 @@ class BallGamePlayground {
             }
         }
         else if(mode === "multi mode"){
+            this.mps = new MultiPlayerSocket(this);
+
+            this.mps.ws.onopen = function(){
+                outer.mps.send_create_player();
+            };
         }
     }
 

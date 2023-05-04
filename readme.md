@@ -16,6 +16,7 @@ Login:
 ├── db.sqlite3
 ├── game
 │   ├── migrations
+│   ├── routing : websocket urls
 │   ├── models : Manage database
 │   │   └── players
 │   ├── static
@@ -31,11 +32,17 @@ Login:
 │   │               ├── game_map
 │   │               ├── particle
 │   │               ├── player
+│   │               ├── socket : wss
+│   │               │   ├── chat
+│   │               │   └── multiplayer
 │   │               └── skills
 │   │                   └── fireball
 │   ├── templates : Manage html files
 │   │   └── multiends
 │   │       └── web.html
+│   ├── consumers : websocket views
+│   │   ├── chat
+│   │   └── multiplayer : Online multiplayer battles
 │   ├── urls : Manage routings - correspondence between links and functions
 │   │   ├── menu
 │   │   ├── playground
