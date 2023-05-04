@@ -18,12 +18,14 @@ class Player extends BallGameObject{
         this.radius = radius;
         this.is_me = is_me;
         // float computing
-        this.eps = 0.1;
+        this.eps = 0.01;
 
         this.cur_skill = null;
 
         // AI attack coll down time
         this.spent_time = 0;
+
+        this.dead = false;
 
 		if(this.is_me){
         	this.img = new Image();
@@ -32,13 +34,14 @@ class Player extends BallGameObject{
     }
 
     start(){
+        this.dead = false;
         if(this.is_me){
             // change position via mouse
             this.add_listening_events();
         }else{
             // AI enemy : randonmly move
-            let tx = Math.random() * this.playground.width;
-            let ty = Math.random() * this.playground.height;
+            let tx = Math.random() * this.playground.width / this.playground.scale;
+            let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);
         }
     }
@@ -61,11 +64,11 @@ class Player extends BallGameObject{
             const rect = outer.ctx.canvas.getBoundingClientRect();
             // left-click:1 wheel:2 right-click:3
             if (e.which === 3) {
-                outer.move_to(e.clientX - rect.left, e.clientY - rect.top);
+                outer.move_to((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
             }
             else if (e.which === 1) {
                 if (outer.cur_skill === "fireball") {
-                    outer.shoot_fireball(e.clientX - rect.left, e.clientY - rect.top);
+                    outer.shoot_fireball((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
                 }
                 outer.cur_skill = null;
             }
@@ -81,16 +84,17 @@ class Player extends BallGameObject{
     }
 
     shoot_fireball(tx, ty){
+        if(this.dead) return false;
         let x = this.x, y = this.y;
-        let radius = this.playground.height * 0.01;
+        let radius = 0.01;
         let angle = Math.atan2(ty - this.y, tx - this.x);
         let vx = Math.cos(angle), vy = Math.sin(angle);
         let color = "orange";
         // speed should not be binded with px
-        let speed = this.playground.height * 0.5;
-        let move_length = this.playground.height * 1.0;
+        let speed = 0.5;
+        let move_length = 1.0;
         // deduct 20% player's energy
-        let damage = this.playground.height * 0.01;
+        let damage = 0.01;
         new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, damage);
     }
 
@@ -124,8 +128,9 @@ class Player extends BallGameObject{
         }
 
         this.radius -= damage;
-        if (this.radius < 10) {
+        if (this.radius < this.eps) {
             // dead
+            this.dead = true;
             this.destroy();
             return false;
         }
@@ -140,6 +145,11 @@ class Player extends BallGameObject{
     }
 
     update(){
+        this.update_move();
+        this.render();
+    }
+
+    update_move(){
         this.spent_time += this.timedelta / 1000;
         if (!this.is_me && this.spent_time > 5 && Math.random() * 200 < 1){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
@@ -148,7 +158,7 @@ class Player extends BallGameObject{
             this.shoot_fireball(tx, ty);
         }
 
-        if (this.damage_speed > 10){
+        if (this.damage_speed > this.eps){
             this.vx = 0;
             this.vy = 0;
             this.move_length = 0;
@@ -164,8 +174,8 @@ class Player extends BallGameObject{
 
                 if(!this.is_me){
                     // AI enemy : never stop
-                    let tx = Math.random() * this.playground.width;
-                    let ty = Math.random() * this.playground.height;
+                    let tx = Math.random() * this.playground.width / this.playground.scale;
+                    let ty = Math.random() * this.playground.height / this.playground.scale;
                     this.move_to(tx, ty);
                 }
             }
@@ -176,22 +186,23 @@ class Player extends BallGameObject{
                 this.move_length -= moved;
             }
         }
-        this.render();
     }
 
+
     render(){
+        let scale = this.playground.scale;
         if(this.is_me){
 			this.ctx.save();
             this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
             this.ctx.stroke();
             this.ctx.clip();
-            this.ctx.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+            this.ctx.drawImage(this.img, (this.x - this.radius) * scale, (this.y - this.radius) * scale, this.radius * 2 * scale, this.radius * 2 * scale);
             this.ctx.restore();
         }
         else{
             this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+            this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, 2 * Math.PI, false);
             this.ctx.fillStyle = this.color;
             this.ctx.fill();
         }
