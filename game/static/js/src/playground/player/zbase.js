@@ -172,14 +172,14 @@ class Player extends BallGameObject{
     }
 
     shoot_shield(){
-        let x=this.x;
-        let y=this.y;
-        let radius=this.radius * 1.5;
-        let vr=1.2;
-        let speed=(this.playground.height * 0.0045) / this.playground.scale;;
-        let last_radius=this.radius * 2.5;
-        let color=this.color;
-        new Shield(this.playground,this,x,y,radius,vr,speed,last_radius,color);
+        let x = this.x;
+        let y = this.y;
+        let radius = this.radius * 1.3;
+        let vr = 1.2;
+        let speed =  0.045;
+        let last_radius = this.radius * 2;
+        let color = this.color;
+        new Shield(this.playground, this, x, y, radius, vr, speed, last_radius, color);
 
         this.shield_coldtime = 10;
         // stop last move in shield
