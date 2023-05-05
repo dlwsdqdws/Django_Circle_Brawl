@@ -26,23 +26,30 @@ class FireBall extends BallGameObject{
             this.destroy();
             return false;
         }
-        else{
-            let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
-            this.x += this.vx * moved;
-            this.y += this.vy * moved;
-            this.move_length -= moved;
 
-            // collision detection
-            for (let i = 0; i < this.playground.players.length; i ++ ) {
-                let player = this.playground.players[i];
-                if (this.player !== player && this.is_collision(player)) {
-                    // cannot hurt myself
-                    this.attack(player);
-                }
+        this.update_move();
+        this.update_attack();
+       
+        this.render();
+    }
+
+    update_move(){
+        let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
+        this.x += this.vx * moved;
+        this.y += this.vy * moved;
+        this.move_length -= moved;
+    }
+
+    update_attack(){
+        // collision detection
+        for (let i = 0; i < this.playground.players.length; i ++ ) {
+            let player = this.playground.players[i];
+            if (this.player !== player && this.is_collision(player)) {
+                // cannot hurt myself
+                this.attack(player);
+                break;
             }
         }
-
-        this.render();
     }
 
     get_dist(x1, y1, x2, y2) {
@@ -72,5 +79,15 @@ class FireBall extends BallGameObject{
         this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, 2 * Math.PI, false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+    }
+
+    on_destory(){
+        let fireballs = this.player.fireballs;
+        for (let i = 0; i < fireballs.length; i ++ ) {
+            if (fireballs[i] === this) {
+                fireballs.splice(i, 1);
+                break;
+            }
+        }
     }
 }
