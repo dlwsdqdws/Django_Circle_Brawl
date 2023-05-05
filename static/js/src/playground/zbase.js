@@ -57,6 +57,7 @@ class BallGamePlayground {
         this.notice_board = new NoticeBoard(this);
         this.player_count = 0;
 
+        this.bullets=[];
         this.players = []; 
        	
 		// add players

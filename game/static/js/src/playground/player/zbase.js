@@ -40,12 +40,17 @@ class Player extends BallGameObject{
             // skill fire_ball CD 3s
             this.fireball_coldtime = 3;
             this.fireball_img = new Image();
-            this.fireball_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/fire_balll.png"
+            this.fireball_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/fire_balll.png";
 
             // flash
             this.flash_coldtime = 5;
             this.flash_img = new Image();
-            this.flash_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/blink.png"
+            this.flash_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/blink.png";
+
+            // shield
+            this.shield_codetime = 10;
+            this.shield_img = new Image();
+            this.shield_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/shield.png";
         }
     }
 
@@ -129,6 +134,12 @@ class Player extends BallGameObject{
                         outer.playground.mps.send_flash(tx, ty);
                     }
                 }
+                else if (outer.cur_skill === "shield"){
+                    if (outer.shield_coldtime >= outer.eps){
+                        return false;
+                    }
+                    outer.shoot_shield();
+                }
                 outer.cur_skill = null;
             }
         });
@@ -151,7 +162,28 @@ class Player extends BallGameObject{
                 outer.cur_skill = "flash";
                 return false;
             }
+            else if (e.which === 83){
+                // console.log("shield");
+                if (outer.shield_coldtime >= outer.eps) return true;
+                outer.cur_skill = "shield";
+                return false;
+            }
         });
+    }
+
+    shoot_shield(){
+        let x=this.x;
+        let y=this.y;
+        let radius=this.radius * 1.5;
+        let vr=1.2;
+        let speed=(this.playground.height * 0.0045) / this.playground.scale;;
+        let last_radius=this.radius * 2.5;
+        let color=this.color;
+        new Shield(this.playground,this,x,y,radius,vr,speed,last_radius,color);
+
+        this.shield_coldtime = 10;
+        // stop last move in shield
+        this.move_length = 0;
     }
 
     shoot_fireball(tx, ty){
@@ -168,6 +200,7 @@ class Player extends BallGameObject{
         let damage = 0.01;
         let fireball = new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, damage);
         this.fireballs.push(fireball);
+        this.playground.bullets.push(fireball);
         return fireball;
     }
 
@@ -270,6 +303,9 @@ class Player extends BallGameObject{
 
         this.flash_coldtime -= this.timedelta / 1000;
         this.flash_coldtime = Math.max(this.flash_coldtime, 0);
+
+        this.shield_coldtime -= this.timedelta / 1000;
+        this.shield_coldtime = Math.max(this.shield_coldtime, 0);
     }
 
     update_move(){
@@ -375,6 +411,27 @@ class Player extends BallGameObject{
             this.ctx.beginPath();
             this.ctx.moveTo(x * scale, y * scale);
             this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.flash_coldtime / 5) - Math.PI / 2, true);
+            this.ctx.lineTo(x * scale, y * scale);
+            this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
+            this.ctx.fill();
+        }
+
+        x = 1.38, y = 0.9, r = 0.04;
+
+        // render shield image
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
+        this.ctx.stroke();
+        this.ctx.clip();
+        this.ctx.drawImage(this.shield_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
+        this.ctx.restore();
+
+        // render shield CD reminder
+        if (this.shield_coldtime >= this.eps){
+            this.ctx.beginPath();
+            this.ctx.moveTo(x * scale, y * scale);
+            this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.shield_coldtime / 5) - Math.PI / 2, true);
             this.ctx.lineTo(x * scale, y * scale);
             this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
             this.ctx.fill();

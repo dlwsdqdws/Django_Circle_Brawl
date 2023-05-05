@@ -267,12 +267,17 @@ class Player extends BallGameObject{
             // skill fire_ball CD 3s
             this.fireball_coldtime = 3;
             this.fireball_img = new Image();
-            this.fireball_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/fire_balll.png"
+            this.fireball_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/fire_balll.png";
 
             // flash
             this.flash_coldtime = 5;
             this.flash_img = new Image();
-            this.flash_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/blink.png"
+            this.flash_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/blink.png";
+
+            // shield
+            this.shield_codetime = 10;
+            this.shield_img = new Image();
+            this.shield_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/shield.png";
         }
     }
 
@@ -356,6 +361,12 @@ class Player extends BallGameObject{
                         outer.playground.mps.send_flash(tx, ty);
                     }
                 }
+                else if (outer.cur_skill === "shield"){
+                    if (outer.shield_coldtime >= outer.eps){
+                        return false;
+                    }
+                    outer.shoot_shield();
+                }
                 outer.cur_skill = null;
             }
         });
@@ -378,7 +389,28 @@ class Player extends BallGameObject{
                 outer.cur_skill = "flash";
                 return false;
             }
+            else if (e.which === 83){
+                // console.log("shield");
+                if (outer.shield_coldtime >= outer.eps) return true;
+                outer.cur_skill = "shield";
+                return false;
+            }
         });
+    }
+
+    shoot_shield(){
+        let x=this.x;
+        let y=this.y;
+        let radius=this.radius * 1.5;
+        let vr=1.2;
+        let speed=(this.playground.height * 0.0045) / this.playground.scale;;
+        let last_radius=this.radius * 2.5;
+        let color=this.color;
+        new Shield(this.playground,this,x,y,radius,vr,speed,last_radius,color);
+
+        this.shield_coldtime = 10;
+        // stop last move in shield
+        this.move_length = 0;
     }
 
     shoot_fireball(tx, ty){
@@ -395,6 +427,7 @@ class Player extends BallGameObject{
         let damage = 0.01;
         let fireball = new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, damage);
         this.fireballs.push(fireball);
+        this.playground.bullets.push(fireball);
         return fireball;
     }
 
@@ -497,6 +530,9 @@ class Player extends BallGameObject{
 
         this.flash_coldtime -= this.timedelta / 1000;
         this.flash_coldtime = Math.max(this.flash_coldtime, 0);
+
+        this.shield_coldtime -= this.timedelta / 1000;
+        this.shield_coldtime = Math.max(this.shield_coldtime, 0);
     }
 
     update_move(){
@@ -602,6 +638,27 @@ class Player extends BallGameObject{
             this.ctx.beginPath();
             this.ctx.moveTo(x * scale, y * scale);
             this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.flash_coldtime / 5) - Math.PI / 2, true);
+            this.ctx.lineTo(x * scale, y * scale);
+            this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
+            this.ctx.fill();
+        }
+
+        x = 1.38, y = 0.9, r = 0.04;
+
+        // render shield image
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
+        this.ctx.stroke();
+        this.ctx.clip();
+        this.ctx.drawImage(this.shield_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
+        this.ctx.restore();
+
+        // render shield CD reminder
+        if (this.shield_coldtime >= this.eps){
+            this.ctx.beginPath();
+            this.ctx.moveTo(x * scale, y * scale);
+            this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.shield_coldtime / 5) - Math.PI / 2, true);
             this.ctx.lineTo(x * scale, y * scale);
             this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
             this.ctx.fill();
@@ -714,6 +771,13 @@ class FireBall extends BallGameObject{
     }
 
     on_destory(){
+        for(let i=0;i<this.playground.bullets.length;i++){
+            if(this.playground.bullets[i] === this){
+                this.playground.bullets.splice(i,1);
+                break;
+            }
+        }
+
         let fireballs = this.player.fireballs;
         for (let i = 0; i < fireballs.length; i ++ ) {
             if (fireballs[i] === this) {
@@ -722,6 +786,77 @@ class FireBall extends BallGameObject{
             }
         }
     }
+}
+class Shield extends BallGameObject{
+    constructor(playground,player,x,y,radius,vr,speed,last_radius,color){
+        super();
+        this.playground=playground;
+        this.ctx=this.playground.game_map.ctx;
+        this.player=player;
+        this.x=x;
+        this.y=y;
+        this.radius=radius;
+        this.vr=vr;
+        this.speed=speed;
+        this.last_radius=last_radius;
+        this.color=color;
+        this.continue_time=3;  //3 seconds
+    }
+
+    start(){
+    }
+
+    get_dist(x1,y1,x2,y2){
+        let dx=x1-x2;
+        let dy=y1-y2;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    is_collision(fireball){
+        let dist=this.get_dist(this.x,this.y,fireball.x,fireball.y);
+        if(dist <= this.radius + fireball.radius) return true;
+        else return false;
+    }
+
+    destroy_fireball(){
+        for(let i=0;i<this.playground.bullets.length;i++){
+            let fireball=this.playground.bullets[i];
+            if(fireball.player === this.player) continue;
+            if(this.is_collision(fireball)){
+                this.playground.bullets.splice(i,1);
+                fireball.destroy();
+            }
+        }
+    }
+
+    update(){
+        if(this.radius>=this.last_radius){
+            if(this.continue_time>0){
+                this.continue_time-=this.timedelta/1000;
+            }
+            else{
+                this.destroy();
+            }
+        }
+        this.destroy_fireball();
+        this.x=this.player.x;
+        this.y=this.player.y;
+        this.radius+=this.speed * this.timedelta / 1000;
+        this.speed*=this.vr;
+        this.radius=Math.min(this.radius,this.last_radius);
+        // console.log(this.radius);
+
+        this.render();
+    }
+
+    render(){
+        let scale=this.playground.scale;
+        this.ctx.beginPath();
+        this.ctx.arc(this.x * scale,this.y* scale,this.radius* scale,0,Math.PI * 2,false);
+        this.ctx.strokeStyle=this.color;
+        this.ctx.stroke();
+    }
+
 }
 class MultiPlayerSocket {
     constructor(playground) {
@@ -934,6 +1069,7 @@ class BallGamePlayground {
         this.notice_board = new NoticeBoard(this);
         this.player_count = 0;
 
+        this.bullets=[];
         this.players = []; 
        	
 		// add players

@@ -90,6 +90,13 @@ class FireBall extends BallGameObject{
     }
 
     on_destory(){
+        for(let i=0;i<this.playground.bullets.length;i++){
+            if(this.playground.bullets[i] === this){
+                this.playground.bullets.splice(i,1);
+                break;
+            }
+        }
+
         let fireballs = this.player.fireballs;
         for (let i = 0; i < fireballs.length; i ++ ) {
             if (fireballs[i] === this) {
