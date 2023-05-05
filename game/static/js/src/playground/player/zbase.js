@@ -147,7 +147,7 @@ class Player extends BallGameObject{
             }
         });
 
-        $(window).keydown(function(e) {
+        this.playground.game_map.$canvas.keydown(function(e) {
             if (outer.playground.state !== "fighting") {
                 // cannot attack before game starts
                 return true;
