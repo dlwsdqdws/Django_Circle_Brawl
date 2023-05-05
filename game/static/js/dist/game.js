@@ -258,10 +258,17 @@ class Player extends BallGameObject{
 
         // this.dead = false;
 
-		if(this.character !== "robot"){
-        	this.img = new Image();
-        	this.img.src = this.playground.root.settings.photo;
-		}
+        if(this.character !== "robot"){
+            this.img = new Image();
+            this.img.src = this.playground.root.settings.photo;
+        }
+
+        if (this.character === "me") {
+            // skill fire_ball CD 3s
+            this.fireball_coldtime = 3;
+            this.fireball_img = new Image();
+            this.fireball_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/fire_balll.png"
+        }
     }
 
     start(){
@@ -328,6 +335,7 @@ class Player extends BallGameObject{
                         // broadcast
                         outer.playground.mps.send_shoot_fireball(tx, ty, fireball.uuid);
                     }
+                    outer.fireball_coldtime = 3;
                 }
                 outer.cur_skill = null;
             }
@@ -338,6 +346,12 @@ class Player extends BallGameObject{
                 // cannot attack before game starts
                 return false;
             }
+
+            if (outer.fireball_coldtime >= outer.eps) {
+                // cannot shoot when skills coll down
+                return false;
+            }
+
             if (e.which === 81) {
                 // keycode 81 = 'Q' in keyboard
                 outer.cur_skill = "fireball";
@@ -429,12 +443,24 @@ class Player extends BallGameObject{
     }
 
     update(){
+        this.spent_time += this.timedelta / 1000;
+
+        if (this.character === "me" && this.playground.state === "fighting"){
+            // player only updates its own CD
+            this.update_coldtime();
+        }
+
         this.update_move();
         this.render();
     }
 
+    update_coldtime() {
+        this.fireball_coldtime -= this.timedelta / 1000;
+        this.fireball_coldtime = Math.max(0, this.fireball_coldtime);
+    }
+
     update_move(){
-        this.spent_time += this.timedelta / 1000;
+        // this.spent_time += this.timedelta / 1000;
         if (this.character === "robot" && this.spent_time > 5 && Math.random() * 200 < 1){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             let tx = player.x + player.speed * this.vx * this.timedelta / 1000 * 0.2;
@@ -488,6 +514,35 @@ class Player extends BallGameObject{
             this.ctx.beginPath();
             this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, 2 * Math.PI, false);
             this.ctx.fillStyle = this.color;
+            this.ctx.fill();
+        }
+
+        if (this.character === "me" && this.playground.state === "fighting") {
+            this.render_skill_coldtime();
+        }
+    }
+
+    render_skill_coldtime() {
+        let scale = this.playground.scale;
+        // skill image : right bottom
+        let x = 1.5, y = 0.9, r = 0.04;
+
+        // render skill image
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
+        this.ctx.stroke();
+        this.ctx.clip();
+        this.ctx.drawImage(this.fireball_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
+        this.ctx.restore();
+
+        // render skill CD reminder
+        if (this.fireball_coldtime >= this.eps) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x * scale, y * scale);
+            this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.fireball_coldtime / 3) - Math.PI / 2, true);
+            this.ctx.lineTo(x * scale, y * scale);
+            this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
             this.ctx.fill();
         }
     }
