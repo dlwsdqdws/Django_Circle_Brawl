@@ -120,6 +120,47 @@ let Ball_Game_Animation = function(timestamp) {
 
 
 requestAnimationFrame(Ball_Game_Animation);
+class ChatField {
+    constructor(playground) {
+        this.playground = playground;
+
+        // history box
+        this.$history = $(`
+            <div class="ball-game-chat-field-history">
+            </div>
+           `);
+
+        // input box
+        this.$input = $(`
+            <input type="text" class="ball-game-chat-field-input">
+            `);
+
+        this.$history.hide();
+        this.$input.hide();
+        this.playground.$playground.append(this.$history);
+        this.playground.$playground.append(this.$input);
+
+        this.start();
+    }
+
+    start() {
+        this.add_listening_events();
+    }
+
+
+
+    show_input() {
+        this.show_history();
+        this.$input.show();
+        this.$input.focus()
+    }
+
+    hide_input() {
+        this.$input.hide();
+        // return focus to game_map
+        this.playground.game_map.$canvas.focus();
+    }
+}
 class GameMap extends BallGameObject {
     constructor(playground){
         super();
@@ -283,7 +324,8 @@ class Player extends BallGameObject{
 
     start(){
         this.playground.player_count ++ ;
-        this.playground.notice_board.write("Ready：" + this.playground.player_count + " Player(s)");
+        this.playground.notice_board.write(
+            "Ready: " + this.playground.player_count + (this.playground.player_count == 1 ? " Player" : " Players") );
 
         if (this.playground.player_count >= 3) {
             // multi game start
@@ -321,7 +363,7 @@ class Player extends BallGameObject{
         this.playground.game_map.$canvas.mousedown(function(e) {
             if (outer.playground.state !== "fighting"){
                 // cannot move before game starts
-                return false;
+                return true;
             }
             const rect = outer.ctx.canvas.getBoundingClientRect();
             // left-click:1 wheel:2 right-click:3
@@ -375,6 +417,21 @@ class Player extends BallGameObject{
         });
 
         this.playground.game_map.$canvas.keydown(function(e) {
+            if (e.which === 13) {
+                // keycode 13 = 'ENTER' : open chat box
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            }
+            else if (e.which === 27) {
+                // keycode 27 = 'ESC' : close chat box
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.char_field.hide_input();
+                    return false;
+                }
+            }
+
             if (outer.playground.state !== "fighting") {
                 // cannot attack before game starts
                 return true;
@@ -1109,6 +1166,7 @@ class BallGamePlayground {
             }
         }
         else if(mode === "multi mode"){
+            this.chat_field = new ChatField(this);
             this.mps = new MultiPlayerSocket(this);
             this.mps.uuid = this.players[0].uuid;
             this.mps.ws.onopen = function(){

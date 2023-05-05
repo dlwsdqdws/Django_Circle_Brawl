@@ -56,7 +56,8 @@ class Player extends BallGameObject{
 
     start(){
         this.playground.player_count ++ ;
-        this.playground.notice_board.write("Ready：" + this.playground.player_count + " Player(s)");
+        this.playground.notice_board.write(
+            "Ready: " + this.playground.player_count + (this.playground.player_count == 1 ? " Player" : " Players") );
 
         if (this.playground.player_count >= 3) {
             // multi game start
@@ -94,7 +95,7 @@ class Player extends BallGameObject{
         this.playground.game_map.$canvas.mousedown(function(e) {
             if (outer.playground.state !== "fighting"){
                 // cannot move before game starts
-                return false;
+                return true;
             }
             const rect = outer.ctx.canvas.getBoundingClientRect();
             // left-click:1 wheel:2 right-click:3
@@ -148,6 +149,21 @@ class Player extends BallGameObject{
         });
 
         this.playground.game_map.$canvas.keydown(function(e) {
+            if (e.which === 13) {
+                // keycode 13 = 'ENTER' : open chat box
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            }
+            else if (e.which === 27) {
+                // keycode 27 = 'ESC' : close chat box
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.char_field.hide_input();
+                    return false;
+                }
+            }
+
             if (outer.playground.state !== "fighting") {
                 // cannot attack before game starts
                 return true;
