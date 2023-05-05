@@ -43,8 +43,8 @@ App-end:
 │   │               ├── particle
 │   │               ├── player
 │   │               ├── notice_board
+│   │               ├── chatbox
 │   │               ├── socket : wss
-│   │               │   ├── chat
 │   │               │   └── multiplayer
 │   │               └── skills
 │   │                   ├── shield
@@ -100,7 +100,8 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 2. Press keyboard 'Q' to choose skill - FireBall, skill CD = 3s;
 3. Press keyboard 'F' to choose skill - Flash, skill CD = 5s;
 4. Press keyboard 'S' to choose skill - Shield, skill CD = 10s;
-5. Left Click mouse to release skills.
+5. Left Click mouse to release skills;
+6. Press keyboard 'Enter' to open chatbox and press keyboard 'Esc' to close.
 
 ## Effects
 

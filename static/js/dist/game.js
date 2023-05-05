@@ -127,6 +127,7 @@ class ChatField {
         // history box
         this.$history = $(`
             <div class="ball-game-chat-field-history">
+            
             </div>
            `);
 
@@ -137,6 +138,7 @@ class ChatField {
 
         this.$history.hide();
         this.$input.hide();
+        this.func_id = null;
         this.playground.$playground.append(this.$history);
         this.playground.$playground.append(this.$input);
 
@@ -147,7 +149,50 @@ class ChatField {
         this.add_listening_events();
     }
 
+    add_listening_events(){
+        let outer = this;
+        this.$input.keydown(function(e) {
+            if (e.which === 27) {
+                outer.hide_input();
+                return false;
+            }
+            else if (e.which === 13){
+                let username = outer.playground.root.settings.username;
+                let text = outer.$input.val();
+                if (text) {
+                    outer.$input.val("");
+                    console.log(username);
+                    outer.add_message(username, text);
+                    outer.playground.mps.send_message(username, text);
+                }
+                return false;
+            }
+        });
+    }
 
+    show_history(){
+        let outer = this;
+        this.$history.fadeIn();
+
+        if (this.func_id) clearTimeout(this.func_id);
+
+        // show 3 seconds
+        this.func_id = setTimeout(function() {
+            outer.$history.fadeOut();
+            outer.func_id = null;
+        }, 3000);
+    }
+
+    render_message(message) {
+        return $(`<div>${message}</div>`);
+    }
+
+    add_message(username, text) {
+        this.show_history();
+        let message = `[${username}] ${text}`;
+        this.$history.append(this.render_message(message));
+        this.$history.scrollTop(this.$history[0].scrollHeight);
+    }
 
     show_input() {
         this.show_history();
@@ -427,7 +472,7 @@ class Player extends BallGameObject{
             else if (e.which === 27) {
                 // keycode 27 = 'ESC' : close chat box
                 if (outer.playground.mode === "multi mode") {
-                    outer.playground.char_field.hide_input();
+                    outer.playground.chat_field.hide_input();
                     return false;
                 }
             }
@@ -967,6 +1012,9 @@ class MultiPlayerSocket {
             else if (event === "shoot_shield"){
                 outer.receive_shoot_shield(uuid);
             }
+            else if (event === "message"){
+                outer.receive_message(uuid, data.username, data.text);
+            }
         };
     }
 
@@ -1092,6 +1140,20 @@ class MultiPlayerSocket {
     receive_shoot_shield(uuid){
         let player=this.get_player(uuid);
         player.shoot_shield();
+    }
+
+    send_message(username, text) {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "message",
+            'uuid': outer.uuid,
+            'username': username,
+            'text': text,
+        }));
+    }
+
+    receive_message(username, text) {
+        this.playground.chat_field.add_message(username, text);
     }
 }
 class BallGamePlayground {

@@ -38,6 +38,9 @@ class MultiPlayerSocket {
             else if (event === "shoot_shield"){
                 outer.receive_shoot_shield(uuid);
             }
+            else if (event === "message"){
+                outer.receive_message(uuid, data.username, data.text);
+            }
         };
     }
 
@@ -163,5 +166,19 @@ class MultiPlayerSocket {
     receive_shoot_shield(uuid){
         let player=this.get_player(uuid);
         player.shoot_shield();
+    }
+
+    send_message(username, text) {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "message",
+            'uuid': outer.uuid,
+            'username': username,
+            'text': text,
+        }));
+    }
+
+    receive_message(username, text) {
+        this.playground.chat_field.add_message(username, text);
     }
 }

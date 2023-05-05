@@ -159,7 +159,7 @@ class Player extends BallGameObject{
             else if (e.which === 27) {
                 // keycode 27 = 'ESC' : close chat box
                 if (outer.playground.mode === "multi mode") {
-                    outer.playground.char_field.hide_input();
+                    outer.playground.chat_field.hide_input();
                     return false;
                 }
             }
