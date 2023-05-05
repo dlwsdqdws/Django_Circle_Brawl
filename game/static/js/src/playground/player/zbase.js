@@ -41,6 +41,11 @@ class Player extends BallGameObject{
             this.fireball_coldtime = 3;
             this.fireball_img = new Image();
             this.fireball_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/fire_balll.png"
+
+            // flash
+            this.flash_coldtime = 5;
+            this.flash_img = new Image();
+            this.flash_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/blink.png"
         }
     }
 
@@ -102,6 +107,9 @@ class Player extends BallGameObject{
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
                 let ty = (e.clientY - rect.top) / outer.playground.scale;
                 if (outer.cur_skill === "fireball") {
+                    if(outer.fireball_coldtime >= outer.eps){
+                        return false;
+                    }
                     let fireball = outer.shoot_fireball(tx, ty);
 
                     if (outer.playground.mode === "multi mode"){
@@ -110,6 +118,17 @@ class Player extends BallGameObject{
                     }
                     outer.fireball_coldtime = 3;
                 }
+                else if (outer.cur_skill === "flash"){
+                    // console.log("flash");
+                    if(outer.flash_codetime >= outer.eps){
+                        return false;
+                    }
+                    
+                    outer.flash(tx, ty);
+                    if (outer.playground.mode === "multi mode"){
+                        outer.playground.mps.send_flash(tx, ty);
+                    }
+                }
                 outer.cur_skill = null;
             }
         });
@@ -117,17 +136,19 @@ class Player extends BallGameObject{
         $(window).keydown(function(e) {
             if (outer.playground.state !== "fighting") {
                 // cannot attack before game starts
-                return false;
-            }
-
-            if (outer.fireball_coldtime >= outer.eps) {
-                // cannot shoot when skills coll down
-                return false;
+                return true;
             }
 
             if (e.which === 81) {
                 // keycode 81 = 'Q' in keyboard
+                if (outer.fireball_coldtime > outer.eps) return true;
                 outer.cur_skill = "fireball";
+                return false;
+            }
+            else if (e.which === 70) {
+                // keycode 70 = 'F' in keyboard
+                if (outer.flash_coldtime >= outer.eps) return true;
+                outer.cur_skill = "flash";
                 return false;
             }
         });
@@ -158,6 +179,22 @@ class Player extends BallGameObject{
                 break;
             }
         }
+    }
+
+    flash(tx, ty){
+        // console.log(tx, ty);
+        let d = this.get_dist(this.x, this.y, tx, ty);
+
+        // max_flash_dist = 0.4 * height
+        d = Math.min(d, 0.4);
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        this.x += d * Math.cos(angle);
+        this.y += d * Math.sin(angle);
+
+        this.flash_coldtime = 5;
+
+        // stop last move when finishing flash
+        this.move_length = 0;
     }
 
     get_dist (x1, y1, x2, y2) {
@@ -230,6 +267,9 @@ class Player extends BallGameObject{
     update_coldtime() {
         this.fireball_coldtime -= this.timedelta / 1000;
         this.fireball_coldtime = Math.max(0, this.fireball_coldtime);
+
+        this.flash_coldtime -= this.timedelta / 1000;
+        this.flash_coldtime = Math.max(this.flash_coldtime, 0);
     }
 
     update_move(){
@@ -300,7 +340,7 @@ class Player extends BallGameObject{
         // skill image : right bottom
         let x = 1.5, y = 0.9, r = 0.04;
 
-        // render skill image
+        // render fireball image
         this.ctx.save();
         this.ctx.beginPath();
         this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
@@ -309,7 +349,7 @@ class Player extends BallGameObject{
         this.ctx.drawImage(this.fireball_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
         this.ctx.restore();
 
-        // render skill CD reminder
+        // render fireball CD reminder
         if (this.fireball_coldtime >= this.eps) {
             this.ctx.beginPath();
             this.ctx.moveTo(x * scale, y * scale);
@@ -318,9 +358,35 @@ class Player extends BallGameObject{
             this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
             this.ctx.fill();
         }
+
+        x = 1.62, y = 0.9, r = 0.04;
+
+        // render flash image
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
+        this.ctx.stroke();
+        this.ctx.clip();
+        this.ctx.drawImage(this.flash_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
+        this.ctx.restore();
+
+        // render flash CD reminder
+        if (this.flash_coldtime >= this.eps){
+            this.ctx.beginPath();
+            this.ctx.moveTo(x * scale, y * scale);
+            this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.flash_coldtime / 5) - Math.PI / 2, true);
+            this.ctx.lineTo(x * scale, y * scale);
+            this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
+            this.ctx.fill();
+        }
     }
 
     on_destroy(){
+        if (this.character === "me"){
+            this.playground.state = "over";
+        }
+
+
         for (let i = 0; i < this.playground.players.length; i ++ ) {
             if (this.playground.players[i] === this) {
                 this.playground.players.splice(i, 1);

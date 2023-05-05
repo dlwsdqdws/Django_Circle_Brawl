@@ -76,7 +76,8 @@ Enter Url  -> app.urls -> game.urls -> game.views.index -> Show Page
 ## Operations
 1. Right click mouse to move;
 2. Press keyboard 'Q' to choose skill - FireBall;
-3. Left Click mouse to attack (always choose a skill before attaching). 
+3. Left Click mouse to attack (always choose a skill before attaching);
+4. Press keyboard 'F' and left click mouse to choose skill - Flash;
 
 ## Effects
 1. Each skill has a cooldown time, which gradually shortens as the game progresses.
