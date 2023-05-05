@@ -58,7 +58,9 @@ App-end:
 │   │       ├── create-player
 │   │       ├── move-to
 │   │       ├── shoot-fireball
-│   │       └── attack
+│   │       ├── attack
+│   │       ├── shoot-field
+│   │       └── message
 │   ├── urls : Manage routings - correspondence between links and functions
 │   │   ├── menu
 │   │   ├── playground
@@ -87,12 +89,14 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 
 ### Data Flow
 
-| Functions | Backend Sender                                     | Frontend Sender                                              | Frontend Receiver                                                      |
-| :-------: | :------------------------------------------------- | :----------------------------------------------------------- | :--------------------------------------------------------------------- |
-|   Move    | async move_to <br> channel_layer.group_send        | send_move_to(to_x,to_y)                                      | receive_move_to(u_uid, to_x, to_y)                                     |
-|  Attack   | async attack <br> channel_layer.group_send         | send_attack(attacked_u_uid, x, y, angle, damage, ball_u_uid) | receive_attack(u_uid, attacked_u_uid, x, y, angle, damage, ball_u_uid) |
-| Fireball  | async shoot_fireball <br> channel_layer.group_send | send_shoot_fireball(to_x, to_y, ball_u_uid)                  | receive_shoot_fireball(u_uid, to_x, to_y, ball_u_uid)                  |
-|   Flash   | async flash <br> channel_layer.group_send          | send_flash(to_x, to_y)                                       | receive_blink(u_uid, to_x, to_y)                                       |
+| Functions | Backend Sender                                         | Frontend Sender       | Frontend Receiver        |
+| :-------: | :----------------------------------------------------- | :-------------------- | :----------------------- |
+|   Move    | async move_to() <br> channel_layer.group_send()        | send_move_to()        | receive_move_to()        |
+|  Attack   | async attack() <br> channel_layer.group_send()         | send_attack()         | receive_attack()         |
+| Fireball  | async shoot_fireball() <br> channel_layer.group_send() | send_shoot_fireball() | receive_shoot_fireball() |
+|   Flash   | async flash() <br> channel_layer.group_send()          | send_flash()          | receive_flash()          |
+|  Shield   | async shoot_shield() <br> channel_layer.group_send()   | send_shoot_shield()   | receive_shoot_shield()   |
+|  Message  | async message() <br> channel_layer.group_send()        | send_message()        | receive_message()        |
 
 ## Operations
 
@@ -101,7 +105,7 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 3. Press keyboard 'F' to choose skill - Flash, skill CD = 5s;
 4. Press keyboard 'S' to choose skill - Shield, skill CD = 10s;
 5. Left Click mouse to release skills;
-6. Press keyboard 'Enter' to open chatbox and press keyboard 'Esc' to close.
+6. Press keyboard 'Enter' to open chat box and press keyboard 'Esc' to close.
 
 ## Effects
 
