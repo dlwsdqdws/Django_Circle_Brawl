@@ -1,13 +1,17 @@
 # Circle Brawl Based on Django and jQuery
 
 ## Contents
+
 ### Pages
+
 HomePage:
+
 <p align="center"><img src="showpic/img/game.png" alt="home" width="500" /></p>
 Login:
 <p align="center"><img src="showpic/img/login_page.png" alt="home" width="500" /></p>
 
 ### Directory Structure
+
 ```
 .
 ├── app
@@ -71,21 +75,33 @@ Login:
 ```
 
 ### URL Routing
-Enter Url  -> app.urls -> game.urls -> game.views.index -> Show Page
+
+Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
+
+### Data Flow
+
+| Functions | Backend Sender                                     | Frontend Sender                                              | Frontend Receiver                                                      |
+| :-------: | :------------------------------------------------- | :----------------------------------------------------------- | :--------------------------------------------------------------------- |
+|   Move    | async move_to <br> channel_layer.group_send        | send_move_to(to_x,to_y)                                      | receive_move_to(u_uid, to_x, to_y)                                     |
+|  Attack   | async attack <br> channel_layer.group_send         | send_attack(attacked_u_uid, x, y, angle, damage, ball_u_uid) | receive_attack(u_uid, attacked_u_uid, x, y, angle, damage, ball_u_uid) |
+| Fireball  | async shoot_fireball <br> channel_layer.group_send | send_shoot_fireball(to_x, to_y, ball_u_uid)                  | receive_shoot_fireball(u_uid, to_x, to_y, ball_u_uid)                  |
+|   Flash   | async flash <br> channel_layer.group_send          | send_flash(to_x, to_y)                                       | receive_blink(u_uid, to_x, to_y)                                       |
 
 ## Operations
+
 1. Right click mouse to move;
 2. Press keyboard 'Q' to choose skill - FireBall;
 3. Left Click mouse to attack (always choose a skill before attaching);
 4. Press keyboard 'F' and left click mouse to choose skill - Flash;
 
 ## Effects
+
 1. Each skill has a cooldown time, which gradually shortens as the game progresses.
 2. After being attacked, the radius of the ball is halved and the speed is increased by 25%. One ball is out when its radius is less than zero.
 3. When hit, the ball will randomly release 10-15 small particles. The color of the particle is the same as that of the ball, the speed is ten times that of the ball, and other parameters are randomly generated.
 4. The first five seconds of the game is the player's protection period, AI players will not attack.
 
 ## Tech-Stack
+
 1. Redis
-   
 2. Websocket Bidirectional Communications
