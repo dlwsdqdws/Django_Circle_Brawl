@@ -275,7 +275,7 @@ class Player extends BallGameObject{
             this.flash_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/blink.png";
 
             // shield
-            this.shield_codetime = 10;
+            this.shield_coldtime = 10;
             this.shield_img = new Image();
             this.shield_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/shield.png";
         }
@@ -658,7 +658,7 @@ class Player extends BallGameObject{
         if (this.shield_coldtime >= this.eps){
             this.ctx.beginPath();
             this.ctx.moveTo(x * scale, y * scale);
-            this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.shield_coldtime / 5) - Math.PI / 2, true);
+            this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.shield_coldtime / 10) - Math.PI / 2, true);
             this.ctx.lineTo(x * scale, y * scale);
             this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
             this.ctx.fill();
