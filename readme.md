@@ -36,11 +36,12 @@ Login:
 │   │               ├── game_map
 │   │               ├── particle
 │   │               ├── player
+│   │               ├── notice_board
 │   │               ├── socket : wss
 │   │               │   ├── chat
 │   │               │   └── multiplayer
-│   │               ├── notice_board
 │   │               └── skills
+│   │                   ├── shield
 │   │                   └── fireball
 │   ├── templates : Manage html files
 │   │   └── multiends
@@ -90,9 +91,10 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 ## Operations
 
 1. Right click mouse to move;
-2. Press keyboard 'Q' to choose skill - FireBall;
-3. Left Click mouse to attack (always choose a skill before attaching);
-4. Press keyboard 'F' and left click mouse to choose skill - Flash;
+2. Left Click mouse to release skills;
+3. Press keyboard 'Q' to choose skill - FireBall, skill CD = 3s;
+4. Press keyboard 'F' to choose skill - Flash, skill CD = 5s;
+5. Press keyboard 'S' to choose skill - Shield, skill CD = 10s;
 
 ## Effects
 

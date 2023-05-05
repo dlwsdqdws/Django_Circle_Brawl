@@ -112,6 +112,17 @@ class MultiPlayer(AsyncWebsocketConsumer):
                     'ty': data['ty'],
                 }
         )
+    
+    async def shoot_shield(self,data):
+        await self.channel_layer.group_send(
+            self.room_name,
+            {
+                'type': 'group_send_event',
+                'event': 'shoot_shield',
+                'uuid': data['uuid'],
+            }
+        )
+
 
     async def group_send_event(self, data):
         await self.send(text_data=json.dumps(data))
@@ -129,3 +140,5 @@ class MultiPlayer(AsyncWebsocketConsumer):
             await self.attack(data)
         elif event == "flash":
             await self.flash(data)
+        elif event == "shoot_shield":
+            await self.shoot_shield(data)

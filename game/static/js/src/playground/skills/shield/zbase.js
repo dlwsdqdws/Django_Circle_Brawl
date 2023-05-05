@@ -11,7 +11,9 @@ class Shield extends BallGameObject {
     this.speed = speed;
     this.last_radius = last_radius;
     this.color = color;
-    this.continue_time = 3; //3 seconds
+
+    // lasts for 3 seconds
+    this.continue_time = 3;
   }
 
   start() {}
@@ -53,7 +55,6 @@ class Shield extends BallGameObject {
     this.radius += (this.speed * this.timedelta) / 1000;
     this.speed *= this.vr;
     this.radius = Math.min(this.radius, this.last_radius);
-    // console.log(this.radius);
 
     this.render();
   }

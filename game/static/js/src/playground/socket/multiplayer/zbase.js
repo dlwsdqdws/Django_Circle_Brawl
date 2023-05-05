@@ -35,6 +35,9 @@ class MultiPlayerSocket {
             else if (event === "flash"){
                 outer.receive_flash(uuid, data.tx, data.ty);
             }
+            else if (event === "shoot_shield"){
+                outer.receive_shoot_shield(uuid);
+            }
         };
     }
 
@@ -110,7 +113,6 @@ class MultiPlayerSocket {
     }
 
     send_attack(attackee_uuid, x, y, angle, damage, ball_uuid){
-        // console.log(attackee_uuid)
         let outer = this;
         this.ws.send(JSON.stringify({
             'event': "attack",
@@ -148,5 +150,18 @@ class MultiPlayerSocket {
         if (player) {
             player.flash(tx, ty);
         }
+    }
+
+    send_shoot_shield(){
+        let outer=this;
+        this.ws.send(JSON.stringify({
+            'event':'shoot_shield',
+            'uuid':outer.uuid,
+        }));
+    }
+
+    receive_shoot_shield(uuid){
+        let player=this.get_player(uuid);
+        player.shoot_shield();
     }
 }
