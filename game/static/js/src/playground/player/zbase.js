@@ -55,7 +55,7 @@ class Player extends BallGameObject{
         let outer = this;
         // disable default mouse right click event
         this.playground.game_map.$canvas.on("contextmenu", function(e) {
-            console.log("right click")
+            // console.log("right click")
             e.preventDefault();
             e.stopPropagation();
             return false;
@@ -173,6 +173,15 @@ class Player extends BallGameObject{
 
         // Movement speed is halved when hit
         this.speed *= 1.25;
+    }
+
+    receive_attack(x, y, angle, damage, ball_uuid, attacker) {
+        attacker.destroy_fireball(ball_uuid);
+        // Forcibly update position when being attacked
+        // correct accumulated position errors.
+        this.x = x;
+        this.y = y;
+        this.is_attacked(angle, damage);
     }
 
     update(){
