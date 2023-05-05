@@ -8,7 +8,7 @@ HomePage:
 
 <p align="center"><img src="showpic/img/game.png" alt="home" width="500" /></p>
 Login:
-<p align="center"><img src="showpic/img/login_page.png" alt="home" width="500" /></p>
+<p align="center"><img src="showpic/img/login_page.png" alt="login" width="500" /></p>
 
 ### Directory Structure
 
@@ -105,3 +105,4 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 
 1. Redis
 2. Websocket Bidirectional Communications
+    <p align="center"><img src="showpic/img/websocket.png" alt="wss" width="500" /></p>

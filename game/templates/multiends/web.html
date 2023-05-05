@@ -7,6 +7,9 @@
 </head>
 
 <body style="margin: 0">
+    <audio autoplay loop>
+        <source src="{% static 'image/audio/background.mp3' %}" type="audio/mpeg">
+    </audio>
     <div id="game_12345678"></div>
     <script type="module">
         import {BallGame} from "{% static 'js/dist/game.js' %}"
