@@ -7,8 +7,14 @@
 HomePage:
 
 <p align="center"><img src="showpic/img/game.png" alt="home" width="500" /></p>
+
 Login:
+
 <p align="center"><img src="showpic/img/login_page.png" alt="login" width="500" /></p>
+
+App-end:
+
+<p align="center"><img src="showpic/img/app_end.png" alt="app" width="500" /></p>
 
 ### Directory Structure
 
@@ -91,20 +97,21 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 ## Operations
 
 1. Right click mouse to move;
-2. Left Click mouse to release skills;
-3. Press keyboard 'Q' to choose skill - FireBall, skill CD = 3s;
-4. Press keyboard 'F' to choose skill - Flash, skill CD = 5s;
-5. Press keyboard 'S' to choose skill - Shield, skill CD = 10s;
+2. Press keyboard 'Q' to choose skill - FireBall, skill CD = 3s;
+3. Press keyboard 'F' to choose skill - Flash, skill CD = 5s;
+4. Press keyboard 'S' to choose skill - Shield, skill CD = 10s;
+5. Left Click mouse to release skills.
 
 ## Effects
 
-1. Each skill has a cooldown time, which gradually shortens as the game progresses.
-2. After being attacked, the radius of the ball is halved and the speed is increased by 25%. One ball is out when its radius is less than zero.
-3. When hit, the ball will randomly release 10-15 small particles. The color of the particle is the same as that of the ball, the speed is ten times that of the ball, and other parameters are randomly generated.
-4. The first five seconds of the game is the player's protection period, AI players will not attack.
+1. Each skill has a cooldown time, which gradually shortens as the game progresses;
+2. Ball's radius represents its "health value", and it will loose when the radius is 0;
+3. After being attacked, the radius of the ball is halved and the speed is increased by 25%;
+4. When hit, the ball will randomly release 10-15 small particles. The color of the particle is the same as that of the ball, the speed is ten times that of the ball, and other parameters are randomly generated;
+5. The first five seconds of the game is the player's protection period, AI players will not attack.
 
 ## Tech-Stack
 
 1. Redis
 2. Websocket Bidirectional Communications
-    <p align="center"><img src="showpic/img/websocket.png" alt="wss" width="500" /></p>
+<p align="center"><img src="showpic/img/websocket.png" alt="wss" width="500" /></p>
