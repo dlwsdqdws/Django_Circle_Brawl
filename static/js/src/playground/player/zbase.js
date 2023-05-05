@@ -81,7 +81,6 @@ class Player extends BallGameObject{
         let outer = this;
         // disable default mouse right click event
         this.playground.game_map.$canvas.on("contextmenu", function(e) {
-            // console.log("right click")
             e.preventDefault();
             e.stopPropagation();
             return false;
@@ -124,13 +123,13 @@ class Player extends BallGameObject{
                     outer.fireball_coldtime = 3;
                 }
                 else if (outer.cur_skill === "flash"){
-                    // console.log("flash");
                     if(outer.flash_codetime >= outer.eps){
                         return false;
                     }
                     
                     outer.flash(tx, ty);
                     if (outer.playground.mode === "multi mode"){
+                        // broadcast
                         outer.playground.mps.send_flash(tx, ty);
                     }
                 }
@@ -139,6 +138,10 @@ class Player extends BallGameObject{
                         return false;
                     }
                     outer.shoot_shield();
+
+                    if(outer.playground.mode === "multi mode"){
+                        outer.playground.mps.send_shoot_shield();
+                    }
                 }
                 outer.cur_skill = null;
             }
@@ -163,7 +166,7 @@ class Player extends BallGameObject{
                 return false;
             }
             else if (e.which === 83){
-                // console.log("shield");
+                // keycode 83 = 'S' in keyboard
                 if (outer.shield_coldtime >= outer.eps) return true;
                 outer.cur_skill = "shield";
                 return false;
@@ -172,14 +175,14 @@ class Player extends BallGameObject{
     }
 
     shoot_shield(){
-        let x=this.x;
-        let y=this.y;
-        let radius=this.radius * 1.5;
-        let vr=1.2;
-        let speed=(this.playground.height * 0.0045) / this.playground.scale;;
-        let last_radius=this.radius * 2.5;
-        let color=this.color;
-        new Shield(this.playground,this,x,y,radius,vr,speed,last_radius,color);
+        let x = this.x;
+        let y = this.y;
+        let radius = this.radius * 1.3;
+        let vr = 1.2;
+        let speed =  0.045;
+        let last_radius = this.radius * 2;
+        let color = this.color;
+        new Shield(this.playground, this, x, y, radius, vr, speed, last_radius, color);
 
         this.shield_coldtime = 10;
         // stop last move in shield
@@ -215,7 +218,6 @@ class Player extends BallGameObject{
     }
 
     flash(tx, ty){
-        // console.log(tx, ty);
         let d = this.get_dist(this.x, this.y, tx, ty);
 
         // max_flash_dist = 0.4 * height
@@ -310,11 +312,16 @@ class Player extends BallGameObject{
 
     update_move(){
         // this.spent_time += this.timedelta / 1000;
-        if (this.character === "robot" && this.spent_time > 5 && Math.random() * 200 < 1){
-            let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
-            let tx = player.x + player.speed * this.vx * this.timedelta / 1000 * 0.2;
-            let ty = player.y + player.speed * this.vy * this.timedelta / 1000 * 0.2;
-            this.shoot_fireball(tx, ty);
+        if (this.character === "robot" && this.spent_time > 5 ){
+            if (Math.random() * 200 < 1){
+                let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
+                let tx = player.x + player.speed * this.vx * this.timedelta / 1000 * 0.2;
+                let ty = player.y + player.speed * this.vy * this.timedelta / 1000 * 0.2;
+                this.shoot_fireball(tx, ty);
+            }
+            if (Math.random() * 1000 < 1){
+                this.shoot_shield();
+            }
         }
 
         if (this.damage_speed > this.eps){

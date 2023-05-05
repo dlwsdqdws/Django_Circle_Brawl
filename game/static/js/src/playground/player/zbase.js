@@ -319,7 +319,7 @@ class Player extends BallGameObject{
                 let ty = player.y + player.speed * this.vy * this.timedelta / 1000 * 0.2;
                 this.shoot_fireball(tx, ty);
             }
-            if (Math.random() * 300 < 1){
+            if (Math.random() * 1000 < 1){
                 this.shoot_shield();
             }
         }
