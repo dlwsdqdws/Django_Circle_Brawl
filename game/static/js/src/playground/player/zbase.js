@@ -29,7 +29,7 @@ class Player extends BallGameObject{
         // AI attack coll down time
         this.spent_time = 0;
 
-        this.dead = false;
+        // this.dead = false;
 
 		if(this.character !== "robot"){
         	this.img = new Image();
@@ -38,7 +38,16 @@ class Player extends BallGameObject{
     }
 
     start(){
-        this.dead = false;
+        this.playground.player_count ++ ;
+        this.playground.notice_board.write("Ready：" + this.playground.player_count + " Player(s)");
+
+        if (this.playground.player_count >= 3) {
+            // multi game start
+            this.playground.state = "fighting";
+            this.playground.notice_board.write("Fighting!!!");
+        }
+
+        // this.dead = false;
         if(this.character === "me"){
             // change position via mouse
             this.add_listening_events();
@@ -67,6 +76,10 @@ class Player extends BallGameObject{
         //     }
         // });
         this.playground.game_map.$canvas.mousedown(function(e) {
+            if (outer.playground.state !== "fighting"){
+                // cannot move before game starts
+                return false;
+            }
             const rect = outer.ctx.canvas.getBoundingClientRect();
             // left-click:1 wheel:2 right-click:3
             if (e.which === 3) {
@@ -94,6 +107,10 @@ class Player extends BallGameObject{
         });
 
         $(window).keydown(function(e) {
+            if (outer.playground.state !== "fighting") {
+                // cannot attack before game starts
+                return false;
+            }
             if (e.which === 81) {
                 // keycode 81 = 'Q' in keyboard
                 outer.cur_skill = "fireball";
@@ -103,7 +120,7 @@ class Player extends BallGameObject{
     }
 
     shoot_fireball(tx, ty){
-        if(this.dead) return false;
+        // if(this.dead) return false;
         let x = this.x, y = this.y;
         let radius = 0.01;
         let angle = Math.atan2(ty - this.y, tx - this.x);
@@ -161,7 +178,7 @@ class Player extends BallGameObject{
         this.radius -= damage;
         if (this.radius < this.eps) {
             // dead
-            this.dead = true;
+            // this.dead = true;
             this.destroy();
             return false;
         }

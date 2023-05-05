@@ -52,6 +52,10 @@ class BallGamePlayground {
         this.resize();
 
         this.mode = mode;
+        // player state machine: waiting -> fighting -> over
+        this.state = "waiting";
+        this.notice_board = new NoticeBoard(this);
+        this.player_count = 0;
 
         this.players = []; 
        	
