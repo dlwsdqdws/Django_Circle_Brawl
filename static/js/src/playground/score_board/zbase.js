@@ -7,25 +7,47 @@ class ScoreBoard extends BallGameObject{
         this.state = null; // win or lose
 
         this.win_img = new Image();
-        this.win_img.src = "https://cdn.acwing.com/media/article/image/2021/12/17/1_8f58341a5e-win.png";
+        this.win_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/win_logo.png";
 
         this.lose_img = new Image();
         this.lose_img.src = "https://circle-brawl.oss-cn-hongkong.aliyuncs.com/lose_logo.png";
     }
 
     start(){
+        // used for test
         this.win();
+    }
+
+    add_listening_events() {
+        let outer = this;
+        let $canvas = this.playground.game_map.$canvas;
+
+        $canvas.off('keypress keydown keyup').on('click', function() {
+            outer.playground.hide();
+            outer.playground.root.menu.show();
+        });
     }
 
     win(){
         this.state = "win";
+
+        let outer = this;
+        // show image for at least 1 second
+        setTimeout(function() {
+            outer.add_listening_events();
+        }, 1000);
     }
 
     lose(){
         this.state = "lose";
+
+        let outer = this;
+        setTimeout(function() {
+            outer.add_listening_events();
+        }, 1000);
     }
 
-    update(){
+    late_update(){
         this.render();
     }
 

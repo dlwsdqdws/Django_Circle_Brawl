@@ -27,6 +27,11 @@ class BallGameObject{
 
     }
 
+    late_update(){
+        // works at the last the every frame
+        // excuted after update()
+    }
+
     on_destroy(){
 
     }
@@ -56,6 +61,11 @@ let Ball_Game_Animation = function(timestamp) {
             obj.timedelta = timestamp - last_timestamp;
             obj.update();
         }
+    }
+
+    for (let i = 0; i < Ball_Game_Objects.length; i ++ ) {
+        let obj = Ball_Game_Objects[i];
+        obj.late_update();
     }
 
 	last_timestamp = timestamp;
