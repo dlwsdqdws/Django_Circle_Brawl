@@ -15,7 +15,7 @@ from queue import Queue
 from time import sleep
 from threading import Thread
 
-from acapp.asgi import channel_layer
+from app.asgi import channel_layer
 from asgiref.sync import async_to_sync
 from django.core.cache import cache
 
@@ -42,6 +42,9 @@ class Pool:
         self.players.append(player)
 
     def check_match(self, a, b):
+        # comment it for test
+        # if a.username == b.username:
+            # return False
         dt = abs(a.score - b.score)
         a_max_dif = a.waiting_time * 50
         b_max_dif = b.waiting_time * 50
@@ -59,7 +62,7 @@ class Pool:
                 'photo': p.photo,
                 'hp': 100,
             })
-	# valid for 1 hour
+        # valid for 1 hour
         cache.set(room_name, players, 3600)
         for p in ps:
             async_to_sync(channel_layer.group_send)(
