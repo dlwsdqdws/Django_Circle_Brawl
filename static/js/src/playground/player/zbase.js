@@ -33,7 +33,7 @@ class Player extends BallGameObject{
 
         if(this.character !== "robot"){
             this.img = new Image();
-            this.img.src = this.playground.root.settings.photo;
+            this.img.src = this.photo;
         }
 
         if (this.character === "me") {

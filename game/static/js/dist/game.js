@@ -161,7 +161,6 @@ class ChatField {
                 let text = outer.$input.val();
                 if (text) {
                     outer.$input.val("");
-                    console.log(username);
                     outer.add_message(username, text);
                     outer.playground.mps.send_message(username, text);
                 }
@@ -346,7 +345,7 @@ class Player extends BallGameObject{
 
         if(this.character !== "robot"){
             this.img = new Image();
-            this.img.src = this.playground.root.settings.photo;
+            this.img.src = this.photo;
         }
 
         if (this.character === "me") {
@@ -1143,7 +1142,7 @@ class MultiPlayerSocket {
     }
 
     send_message(username, text) {
-        let outer = this;
+        let outer =this;
         this.ws.send(JSON.stringify({
             'event': "message",
             'uuid': outer.uuid,
@@ -1152,7 +1151,7 @@ class MultiPlayerSocket {
         }));
     }
 
-    receive_message(username, text) {
+    receive_message(uuid, username, text) {
         this.playground.chat_field.add_message(username, text);
     }
 }

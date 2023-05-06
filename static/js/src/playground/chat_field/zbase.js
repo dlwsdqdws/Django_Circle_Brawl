@@ -39,7 +39,6 @@ class ChatField {
                 let text = outer.$input.val();
                 if (text) {
                     outer.$input.val("");
-                    console.log(username);
                     outer.add_message(username, text);
                     outer.playground.mps.send_message(username, text);
                 }
