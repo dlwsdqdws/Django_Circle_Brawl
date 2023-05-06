@@ -72,6 +72,7 @@ class BallGamePlayground {
         // player state machine: waiting -> fighting -> over
         this.state = "waiting";
         this.notice_board = new NoticeBoard(this);
+        this.score_board = new ScoreBoard(this);
         this.player_count = 0;
 
         this.bullets=[];
