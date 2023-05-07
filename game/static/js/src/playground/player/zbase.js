@@ -303,8 +303,11 @@ class Player extends BallGameObject{
         this.is_attacked(angle, damage);
     }
 
+
     update(){
         this.spent_time += this.timedelta / 1000;
+
+        this.update_win();
 
         if (this.character === "me" && this.playground.state === "fighting"){
             // player only updates its own CD
@@ -313,6 +316,13 @@ class Player extends BallGameObject{
 
         this.update_move();
         this.render();
+    }
+
+    update_win() {
+        if (this.playground.state === "fighting" && this.character === "me" && this.playground.players.length === 1) {
+            this.playground.state = "over";
+            this.playground.score_board.win();
+        }
     }
 
     update_coldtime() {
@@ -463,7 +473,10 @@ class Player extends BallGameObject{
 
     on_destroy(){
         if (this.character === "me"){
-            this.playground.state = "over";
+            if (this.playground.state === "fighting") {
+                this.playground.state = "over";
+                this.playground.score_board.lose();
+            }
         }
 
 

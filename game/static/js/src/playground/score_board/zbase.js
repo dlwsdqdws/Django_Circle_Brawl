@@ -14,15 +14,14 @@ class ScoreBoard extends BallGameObject{
     }
 
     start(){
-        // used for test
-        this.win();
+        
     }
 
     add_listening_events() {
         let outer = this;
         let $canvas = this.playground.game_map.$canvas;
 
-        $canvas.off('keypress keydown keyup').on('click', function() {
+        $canvas.on('click', function() {
             outer.playground.hide();
             outer.playground.root.menu.show();
         });

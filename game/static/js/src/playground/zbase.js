@@ -104,7 +104,7 @@ class BallGamePlayground {
         }
 
         while (this.bullets && this.bullets.length > 0) {
-            this.bullets[0].destroy();
+            this.bullets[0].destroy_from_bullets();
         }
 
         if (this.game_map){

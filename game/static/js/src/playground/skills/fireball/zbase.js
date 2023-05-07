@@ -23,6 +23,7 @@ class FireBall extends BallGameObject{
 
     update(){
         if (this.move_length < this.eps) {
+            this.destroy_from_bullets();
             this.destroy();
             return false;
         }
@@ -78,6 +79,7 @@ class FireBall extends BallGameObject{
             // broadcast attack
             this.playground.mps.send_attack(player.uuid, player.x, player.y, angle, this.damage, this.uuid);
         }
+        this.destroy_from_bullets();
         this.destroy();
     }
 
@@ -89,14 +91,16 @@ class FireBall extends BallGameObject{
         this.ctx.fill();
     }
 
-    on_destory(){
-        for(let i=0;i<this.playground.bullets.length;i++){
-            if(this.playground.bullets[i] === this){
+    destroy_from_bullets() {
+        for(let i=0;i<this.playground.bullets.length;i++) {
+            if(this.playground.bullets[i] === this) {
                 this.playground.bullets.splice(i,1);
                 break;
             }
         }
+    }
 
+    on_destory(){
         let fireballs = this.player.fireballs;
         for (let i = 0; i < fireballs.length; i ++ ) {
             if (fireballs[i] === this) {
