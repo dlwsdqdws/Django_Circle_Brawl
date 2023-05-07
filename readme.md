@@ -107,7 +107,8 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 3. Press keyboard 'F' to choose skill - Flash, skill CD = 5s;
 4. Press keyboard 'S' to choose skill - Shield, skill CD = 10s;
 5. Left Click mouse to release skills;
-6. Press keyboard 'Enter' to open chat box and press keyboard 'Esc' to close.
+6. Press keyboard 'Enter' to open chat box and press keyboard 'Esc' to close;
+7. At the end of each game, left click mouse once to exit the score board, and then left click again to return to the menu.
 
 ## Effects
 
@@ -127,3 +128,5 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 3. Matching System
     <br>The matching system is composed of a message queue, a producer-consumer model, and a matching pool. The matching system communicates with the Game Server using thrift.
     <br>player sends connection request to Game Server -> Game server sends connection channel to player -> player sends add_player request to Game Server -> Game Server sends matching request to Matching Server -> Matching Server sends room_info to Game Server ->Game Server sends room_info to player
+4. Scoring Algorithm
+    <br>The scoring system adopts the Elo Score rating system.

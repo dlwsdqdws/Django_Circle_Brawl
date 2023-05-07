@@ -61,6 +61,7 @@ class Pool:
                 'username': p.username,
                 'photo': p.photo,
                 'hp': 100,
+                'score': p.score
             })
         # valid for 1 hour
         cache.set(room_name, players, 3600)

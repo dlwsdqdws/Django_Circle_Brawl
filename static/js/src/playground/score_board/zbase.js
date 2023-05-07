@@ -66,6 +66,7 @@ class ScoreBoard extends BallGameObject{
         else if (this.state === "lose"){
             this.ctx.drawImage(this.lose_img, this.playground.width / 2 - len / 2, this.playground.height / 2 - len / 2, len, len);
         } else if (this.state === "hide"){
+            // hide score board
             // this.ctx.clearRect(this.playground.width / 2 - len / 2, this.playground.height / 2 - len / 2, len, len);
         }
     }

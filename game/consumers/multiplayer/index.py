@@ -72,7 +72,56 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 }
         )
 
+
     async def attack(self, data):
+        if not self.room_name:
+            return
+
+        players = cache.get(self.room_name)
+
+        if not players:
+            return
+
+        def computeK(score):
+            if score >= 2400:
+                return 16
+            elif score >= 2100:
+                return 20
+            else:
+                return 24
+
+        def computeScore(my_score, scores):
+            enemy_score = (sum(scores) - my_score) / 2
+            return 1 / (1+pow(10, (my_score - enemy_score) / 400))
+
+        for player in players:
+            if player['uuid'] == data['attackee_uuid']:
+                player['hp'] -= 25
+
+        remain_cnt = 0
+        for player in players:
+            if player['hp'] > 0:
+                remain_cnt += 1
+
+        if remain_cnt > 1:
+            if self.room_name:
+                cache.set(self.room_name, players, 3600)
+        else:
+            # scores = [player.score for player in players]
+            def db_update_player_score(username, score):
+                player = Player.objects.get(user__username=username)
+                player.score += score
+                player.save()
+        
+            for i in range(len(players)):
+                player = players[i]
+                # my_score = scores[i]
+                if player['hp'] <= 0:
+                    await database_sync_to_async(db_update_player_score)(player['username'], -5)
+                else:
+                    await database_sync_to_async(db_update_player_score)(player['username'], 10)
+
+
         await self.channel_layer.group_send(
                 self.room_name,
                 {
