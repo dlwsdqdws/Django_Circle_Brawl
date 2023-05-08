@@ -51,6 +51,7 @@ class Player extends BallGameObject {
     }
 
     if (this.character === "me") {
+      this.get_score();
       // skill fire_ball CD 3s
       this.fireball_coldtime = 3;
       this.fireball_img = new Image();
@@ -72,9 +73,6 @@ class Player extends BallGameObject {
   }
 
   start() {
-    // if (this.playground.mode === "multi mode") 
-      this.get_score();
-    console.log(this.old_score);
     this.playground.player_count++;
     this.playground.notice_board.write(
       "Ready: " +
@@ -379,6 +377,8 @@ class Player extends BallGameObject {
       this.playground.players.length === 1
     ) {
       this.playground.state = "over";
+      this.get_score();
+      // console.log(this.new_score - this.old_score);
       this.playground.score_board.win();
     }
   }
@@ -596,14 +596,21 @@ class Player extends BallGameObject {
   }
 
   get_score(){
+    let outer = this;
     $.ajax({
       url: "https://app4415.acapp.acwing.com.cn/playground/getscore/",
       type: "GET",
       success: function (resp){
         if (resp.result === "success"){
-          this.old_score = resp.score;           
+          if(outer.playground.state === "over"){
+              outer.new_score = resp.score;
+          }
+          else{
+            outer.old_score = resp.score;        
+          }
+          // console.log(outer.old_score, outer.new_score);
         }
-      }.bind(this)
+      }
     });
   }
 
@@ -611,6 +618,8 @@ class Player extends BallGameObject {
     if (this.character === "me") {
       if (this.playground.state === "fighting") {
         this.playground.state = "over";
+        this.get_score();
+          // console.log(this.new_score - this.old_score);
         this.playground.score_board.lose();
       }
     }
