@@ -106,9 +106,9 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 if score >= 2400:
                     return 16
                 elif score >= 2100:
-                    return 20
-                else:
                     return 24
+                else:
+                    return 36
 
             def computeScore(my_score, scores):
                 enemy_score = (sum(scores) - my_score) / 2
@@ -119,9 +119,9 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 player = players[i]
                 my_score = scores[i]
                 if player['hp'] <= 0:
-                    await database_sync_to_async(db_update_player_score)(player['username'], my_score + int(computeK(my_score) * (0 - computeScore(my_score, scores))))
+                    await database_sync_to_async(db_update_player_score)(player['username'], int(computeK(my_score) * (0 - computeScore(my_score, scores))))
                 else:
-                    await database_sync_to_async(db_update_player_score)(player['username'], my_score + int(computeK(my_score) * (1 - computeScore(my_score, scores))))
+                    await database_sync_to_async(db_update_player_score)(player['username'], int(computeK(my_score) * (1 - computeScore(my_score, scores))))
 
 
         await self.channel_layer.group_send(
