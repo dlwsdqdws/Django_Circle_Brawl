@@ -596,20 +596,14 @@ class Player extends BallGameObject {
   }
 
   get_score(){
-    let outer = this;
     $.ajax({
       url: "https://app4415.acapp.acwing.com.cn/playground/getscore/",
       type: "GET",
       success: function (resp){
         if (resp.result === "success"){
-          if (outer.playground.state === "over"){
-            outer.new_score = resp.score;
-          }
-          else{
-            outer.old_score = resp.score;
-          }
+          this.old_score = resp.score;           
         }
-      }
+      }.bind(this)
     });
   }
 
