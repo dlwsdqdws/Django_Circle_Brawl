@@ -90,7 +90,7 @@ class FireBall extends BallGameObject {
 
     if (this.playground.mode === "multi mode") {
       // broadcast attack
-      this.playground.mps.send_attack(
+      this.playground.mps.send_(
         player.uuid,
         player.x,
         player.y,
