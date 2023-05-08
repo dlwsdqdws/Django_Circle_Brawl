@@ -39,6 +39,10 @@ class Player extends BallGameObject {
     // AI attack coll down time
     this.spent_time = 0;
 
+    // default rating score 1500
+    this.old_score = 1500;
+    this.new_score = 1500;
+
     // this.dead = false;
 
     if (this.character !== "robot") {
@@ -68,6 +72,9 @@ class Player extends BallGameObject {
   }
 
   start() {
+    // if (this.playground.mode === "multi mode") 
+      this.get_score();
+    console.log(this.old_score);
     this.playground.player_count++;
     this.playground.notice_board.write(
       "Ready: " +
@@ -586,6 +593,24 @@ class Player extends BallGameObject {
       this.ctx.fillStyle = "rgba(169, 169, 169, 0.6)";
       this.ctx.fill();
     }
+  }
+
+  get_score(){
+    let outer = this;
+    $.ajax({
+      url: "https://app4415.acapp.acwing.com.cn/playground/getscore/",
+      type: "GET",
+      success: function (resp){
+        if (resp.result === "success"){
+          if (outer.playground.state === "over"){
+            outer.new_score = resp.score;
+          }
+          else{
+            outer.old_score = resp.score;
+          }
+        }
+      }
+    });
   }
 
   on_destroy() {
