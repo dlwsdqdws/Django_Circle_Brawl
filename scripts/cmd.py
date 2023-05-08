@@ -1,18 +1,9 @@
-1. update database:
+# update database:
 python3 manage.py makemigrations
 python3 manage.py migrate
 
-2. start uwsgi:
-uwsgi --ini scripts/uwsgi.ini
 
-3. start django_channels:
-daphne -b 0.0.0.0 -p 5015 acapp.asgi:application
-
-4. start thrift:
-cd app/match_system/src
-./main.py
-
-5. manage database:
+# manage database:
 python3 manage.py shell
 
 from django.core.cache import cache

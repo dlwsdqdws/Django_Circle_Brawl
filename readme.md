@@ -119,6 +119,36 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
 5. The first five seconds of the game is the player's protection period, AI players will not attack.
 6. Player matchmaking will prioritize selecting opponents with similar scores.
 
+## How it works
+### Environment Setup
+1. start `nginx`
+```
+sudo /etc/init.d/nginx start
+```
+
+2. start `thrift`
+```
+cd match_system/src/
+chmod +x main.py
+./main.py
+```
+
+3. start `redis`
+```
+sudo redis-server /etc/redis/redis.conf
+```
+
+### Service Setup
+1. start `uwsgi`
+```
+uwsgi --ini scripts/uwsgi.ini
+```
+
+2. start `django_channels`
+```
+daphne -b 0.0.0.0 -p 5015 app.asgi:application
+```
+
 ## Tech-Stack
 
 1. Redis
