@@ -19,8 +19,7 @@ from app.asgi import channel_layer
 from asgiref.sync import async_to_sync
 from django.core.cache import cache
 
-# Message Queue : thread-safe
-queue = Queue()
+queue = Queue()  # 消息队列
 
 class Player:
     def __init__(self, score, uuid, username, photo, channel_name):
@@ -29,9 +28,7 @@ class Player:
         self.username = username
         self.photo = photo
         self.channel_name = channel_name
-        # waiting time
-        # As time goes on, the expected threshold for matching becomes lower and lower.
-        self.waiting_time = 0
+        self.waiting_time = 0  # 等待时间
 
 
 class Pool:
@@ -42,9 +39,6 @@ class Pool:
         self.players.append(player)
 
     def check_match(self, a, b):
-        # comment it for test
-        # if a.username == b.username:
-            # return False
         dt = abs(a.score - b.score)
         a_max_dif = a.waiting_time * 50
         b_max_dif = b.waiting_time * 50
@@ -61,10 +55,8 @@ class Pool:
                 'username': p.username,
                 'photo': p.photo,
                 'hp': 100,
-                'score': p.score
             })
-        # valid for 1 hour
-        cache.set(room_name, players, 3600)
+        cache.set(room_name, players, 3600)  # 有效时间：1小时
         for p in ps:
             async_to_sync(channel_layer.group_send)(
                 room_name,
@@ -86,8 +78,6 @@ class Pool:
             self.players = sorted(self.players, key=lambda p: p.score)
             flag = False
             for i in range(len(self.players) - 2):
-                # greedy
-                # Enumerate a contiguous segment after sorting
                 a, b, c = self.players[i], self.players[i + 1], self.players[i + 2]
                 if self.check_match(a, b) and self.check_match(a, c) and self.check_match(b, c):
                     self.match_success([a, b, c])
@@ -106,7 +96,6 @@ class MatchHandler:
         print("Add Player: %s %d" % (username, score))
         player = Player(score, uuid, username, photo, channel_name)
         queue.put(player)
-        # return value must be 0
         return 0
 
 
@@ -125,7 +114,6 @@ def worker():
             pool.add_player(player)
         else:
             pool.match()
-            # try match every second
             sleep(1)
 
 
@@ -145,4 +133,3 @@ if __name__ == '__main__':
     print('Starting the server...')
     server.serve()
     print('done.')
-
