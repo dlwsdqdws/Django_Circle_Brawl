@@ -18,7 +18,8 @@ class MultiPlayer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(self.room_name, self.channel_name);
+        if self.room_name:
+            await self.channel_layer.group_discard(self.room_name, self.channel_name)
 
     async def create_player(self, data):
         self.room_name = None
@@ -82,18 +83,6 @@ class MultiPlayer(AsyncWebsocketConsumer):
         if not players:
             return
 
-        def computeK(score):
-            if score >= 2400:
-                return 16
-            elif score >= 2100:
-                return 20
-            else:
-                return 24
-
-        def computeScore(my_score, scores):
-            enemy_score = (sum(scores) - my_score) / 2
-            return 1 / (1+pow(10, (my_score - enemy_score) / 400))
-
         for player in players:
             if player['uuid'] == data['attackee_uuid']:
                 player['hp'] -= 25
@@ -112,14 +101,27 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 player = Player.objects.get(user__username=username)
                 player.score += score
                 player.save()
+            
+            def computeK(score):
+                if score >= 2400:
+                    return 16
+                elif score >= 2100:
+                    return 20
+                else:
+                    return 24
+
+            def computeScore(my_score, scores):
+                enemy_score = (sum(scores) - my_score) / 2
+                return 1 / (1+pow(10, (my_score - enemy_score) / 400))
         
+            scores = [player['score'] for player in players]
             for i in range(len(players)):
                 player = players[i]
-                # my_score = scores[i]
+                my_score = scores[i]
                 if player['hp'] <= 0:
-                    await database_sync_to_async(db_update_player_score)(player['username'], -5)
+                    await database_sync_to_async(db_update_player_score)(player['username'], my_score + int(computeK(my_score) * (0 - computeScore(my_score, scores))))
                 else:
-                    await database_sync_to_async(db_update_player_score)(player['username'], 10)
+                    await database_sync_to_async(db_update_player_score)(player['username'], my_score + int(computeK(my_score) * (1 - computeScore(my_score, scores))))
 
 
         await self.channel_layer.group_send(

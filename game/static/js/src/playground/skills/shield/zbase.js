@@ -36,6 +36,7 @@ class Shield extends BallGameObject {
       if (fireball.player === this.player) continue;
       if (this.is_collision(fireball)) {
         this.playground.bullets.splice(i, 1);
+        fireball.destroy_from_bullets();
         fireball.destroy();
       }
     }
