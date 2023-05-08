@@ -130,3 +130,4 @@ Enter Url -> app.urls -> game.urls -> game.views.index -> Show Page
     <br>player sends connection request to Game Server -> Game server sends connection channel to player -> player sends add_player request to Game Server -> Game Server sends matching request to Matching Server -> Matching Server sends room_info to Game Server ->Game Server sends room_info to player
 4. Scoring Algorithm
     <br>The scoring system adopts the Elo Score rating system.
+5. JWT

@@ -348,6 +348,7 @@ class Player extends BallGameObject {
   }
 
   receive_attack(x, y, angle, damage, ball_uuid, attacker) {
+      console.log("receive", x,y);
     attacker.destroy_fireball(ball_uuid);
     // Forcibly update position when being attacked
     // correct accumulated position errors.
@@ -357,6 +358,7 @@ class Player extends BallGameObject {
   }
 
   update() {
+      if(this.x < 0 || this.x > 2 || this.y < 0 || this.y > 1) console.log("yes", this.x, this.y)
     this.spent_time += this.timedelta / 1000;
 
     this.update_win();
@@ -416,8 +418,10 @@ class Player extends BallGameObject {
       this.vx = 0;
       this.vy = 0;
       this.move_length = 0;
-      this.x += (this.damage_vx * this.damage_speed * this.timedelta) / 1000;
-      this.y += (this.damage_vy * this.damage_speed * this.timedelta) / 1000;
+      // console.log("params", this.damage_vx, this.damage_vy, this.damage_speed)
+      this.x += this.damage_vx * this.damage_speed * this.timedelta / 1000;
+      this.y += this.damage_vy * this.damage_speed * this.timedelta / 1000;
+      console.log("reple", this.damage_vx * this.damage_speed * this.timedelta / 1000, this.damage_vy * this.damage_speed * this.timedelta / 1000)
       this.damage_speed *= this.friction;
     } else {
       if (this.move_length < this.eps) {
