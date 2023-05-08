@@ -378,7 +378,7 @@ class Player extends BallGameObject {
     ) {
       this.playground.state = "over";
       this.get_score();
-        console.log(this.new_score - this.old_score);
+      // this.playground.notice_board.write(this.new_score - this.old_score);
       this.playground.score_board.win();
     }
   }
@@ -619,7 +619,7 @@ class Player extends BallGameObject {
       if (this.playground.state === "fighting") {
         this.playground.state = "over";
         this.get_score();
-          console.log(this.new_score - this.old_score);
+        // this.playground.notice_board.write(this.new_score - this.old_score);
         this.playground.score_board.lose();
       }
     }
