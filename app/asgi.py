@@ -13,6 +13,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 django.setup()
 
+from game.channelsmiddleware import JwtAuthMiddlewareStack
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
@@ -24,5 +25,5 @@ channel_layer = get_channel_layer()
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
-    "websocket": AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+    "websocket": JwtAuthMiddlewareStack(URLRouter(websocket_urlpatterns))
 })
