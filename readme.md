@@ -161,3 +161,4 @@ daphne -b 0.0.0.0 -p 5015 app.asgi:application
 4. Scoring Algorithm
     <br>The scoring system adopts the Elo Score rating system.
 5. JWT
+    <p align="center"><img src="showpic/img/jwt.png" alt="app" width="500" /></p>
