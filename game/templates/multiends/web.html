@@ -18,7 +18,7 @@
     <script type="module">
         import {BallGame} from "{% static 'js/dist/game.js' %}"
         $(document).ready(function(){
-            let ball_game = new BallGame("game_12345678");
+            let ball_game = new BallGame("game_12345678", null, "{{ access }}", "{{ refresh }}");
         });
 
     </script>

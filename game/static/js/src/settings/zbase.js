@@ -114,9 +114,44 @@ class Settings {
     if (this.platform === "ACAPP") {
       this.getinfo_app();
     } else {
-      this.getinfo_web();
+      if (this.root.access){
+        this.getinfo_web();
+        this.refresh_jwt_token();
+      }
+      else{
+        this.login();
+      }
       this.add_listening_events();
     }
+  }
+
+  refresh_jwt_token() {
+    setInterval(() => {
+      $.ajax({
+        url: "https://app4415.acapp.acwing.com.cn/settings/token/refresh/",
+        type: "post",
+        data: {
+          refresh: this.root.refresh,
+        },
+        success: resp => {
+          this.root.access = resp.access;
+          console.log(resp);
+        }
+      });
+    }, 4.5 * 60 * 1000);
+
+    setTimeout(() => {
+      $.ajax({
+        url: "https://app4415.acapp.acwing.com.cn/settings/ranklist/",
+        type: "get",
+        headers: {
+          'Authorization': "Bearer " + this.root.access,
+        },
+        success: resp => {
+          console.log(resp);
+        }
+      });
+     }, 5000);
   }
 
   add_listening_events() {
@@ -166,30 +201,35 @@ class Settings {
 
   login_on_remote() {
     // login via server
-    let outer = this;
     let username = this.$login_username.val();
     let password = this.$login_password.val();
     this.$login_error_message.empty();
-    $.ajax({
-      url: "https://app4415.acapp.acwing.com.cn/settings/login/",
-      type: "GET",
-      data: {
-        username: username,
-        password: password,
-      },
-      success: function (resp) {
-        if (resp.result === "success") {
-          location.reload();
-        } else {
-          outer.$login_error_message.html(resp.result);
+
+    try{
+      $.ajax({
+        url: "https://app4415.acapp.acwing.com.cn/settings/token/",
+        type: "post",
+        data: {
+          username: username,
+          password: password,
+        },
+        success: resp => {
+          this.root.access = resp.access;
+          this.root.refresh = resp.refresh;
+          this.refresh_jwt_token();
+          this.getinfo_web();
+        },
+        error: () => {
+            this.$login_error_message.html("Username/Password is not correct");
         }
-      },
-    });
+      });
+    }  catch(e){
+      console.log("Unable to login")
+    }
   }
 
   register_on_remote() {
     // register a user via server
-    let outer = this;
     let username = this.$register_username.val();
     let password = this.$register_password.val();
     let password_confirm = this.$register_password_confirm.val();
@@ -197,17 +237,17 @@ class Settings {
 
     $.ajax({
       url: "https://app4415.acapp.acwing.com.cn/settings/register/",
-      type: "GET",
+      type: "post",
       data: {
-        username: username,
-        password: password,
-        password_confirm: password_confirm,
+        username,
+        password,
+        password_confirm,
       },
-      success: function (resp) {
+      success: resp => {
         if (resp.result === "success") {
-          location.reload();
+          this.login_on_remote(username, password);
         } else {
-          outer.$register_error_message.html(resp.result);
+          this.$register_error_message.html(resp.result);
         }
       },
     });
@@ -218,15 +258,9 @@ class Settings {
     if (this.platform === "ACAPP") {
       this.root.AcWingOS.api.window.close();
     } else {
-      $.ajax({
-        url: "https://app4415.acapp.acwing.com.cn/settings/logout/",
-        type: "GET",
-        success: function (resp) {
-          if (resp.result === "success") {
-            location.reload();
-          }
-        },
-      });
+      this.root.access = "";
+      this.root.refresh = "";
+      location.href = "/";
     }
   }
 
@@ -280,22 +314,23 @@ class Settings {
   }
 
   getinfo_web() {
-    let outer = this;
-
     $.ajax({
       url: "https://app4415.acapp.acwing.com.cn/settings/getinfo/",
       type: "GET",
       data: {
-        platform: outer.platform,
+        platform: this.platform,
       },
-      success: function (resp) {
+      headers: {
+        'Authorization': "Bearer " + this.root.access,
+      },
+      success: resp => {
         if (resp.result === "success") {
-          outer.username = resp.username;
-          outer.photo = resp.photo;
-          outer.hide();
-          outer.root.menu.show();
+          this.username = resp.username;
+          this.photo = resp.photo;
+          this.hide();
+          this.root.menu.show();
         } else {
-          outer.login();
+          this.login();
         }
       },
     });

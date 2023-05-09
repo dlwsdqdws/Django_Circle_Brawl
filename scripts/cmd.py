@@ -1,10 +1,13 @@
 # update database:
-python3 manage.py makemigrations
-python3 manage.py migrate
+# python3 manage.py makemigrations
+# python3 manage.py migrate
 
 
 # manage database:
-python3 manage.py shell
+# python3 manage.py shell
+
+# update installed app
+# python3 managy.py collectstatic
 
 from django.core.cache import cache
 
