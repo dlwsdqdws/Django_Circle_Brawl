@@ -126,6 +126,7 @@ class Settings {
   }
 
   refresh_jwt_token() {
+    // refresh jwt for every 4 min 30 s
     setInterval(() => {
       $.ajax({
         url: "https://app4415.acapp.acwing.com.cn/settings/token/refresh/",
@@ -277,19 +278,22 @@ class Settings {
   }
 
   app_login(appid, redirect_uri, scope, state) {
-    let outer = this;
     this.root.AcWingOS.api.oauth2.authorize(
       appid,
       redirect_uri,
       scope,
       state,
-      function (resp) {
+      resp => {
         if (resp.result === "success") {
-          outer.username = resp.username;
-          outer.photo = resp.photo;
+          this.username = resp.username;
+          this.photo = resp.photo;
           // hide settings page, show menu page
-          outer.hide();
-          outer.root.menu.show();
+          this.hide();
+          this.root.menu.show();
+          
+          this.root.access = resp.access;
+          this.root.refresh = resp.refresh;
+          this.refresh_jwt_token();
         }
       }
     );
