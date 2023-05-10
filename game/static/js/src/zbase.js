@@ -11,6 +11,7 @@ export class BallGame {
 
     this.menu = new BallGameMenu(this);
     this.settings = new Settings(this);
+    this.rank = new BallGameRank(this);
     this.playground = new BallGamePlayground(this);
 
     this.start();
