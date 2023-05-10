@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from game.models.player.player import Player
 
 class RankScorePageListView(APIView):
-    # permission_classes = ([IsAuthenticated])
+    permission_classes = ([IsAuthenticated])
 
     def get(self, request, page):
         players = Player.objects.all().order_by('-score')

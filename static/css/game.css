@@ -200,6 +200,7 @@
     height: 60vh;
     overflow-y: auto;
     background-color: rgba(242, 242, 242, 0.7);
+    text-align: center;
 }
 
 .ball-game-rank-table-score thead, .ball-game-rank-table-score-tbody tr, .ball-game-rank-table-time thead, .ball-game-rank-table-time tr {
@@ -211,6 +212,8 @@
 .pagination {
     position: relative;
     left: 41%;
+    display: flex;
+    margin: 2vw;
 }
 
 .ball-game-return {
