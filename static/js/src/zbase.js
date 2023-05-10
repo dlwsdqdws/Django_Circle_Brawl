@@ -5,10 +5,12 @@ export class BallGame {
 
     this.AcWingOS = AcWingOS;
     this.access = access;
+    this.access_expires = new Date();
     this.refresh = refresh;
+    this.refresh_expires = new Date();
 
-    this.settings = new Settings(this);
     this.menu = new BallGameMenu(this);
+    this.settings = new Settings(this);
     this.playground = new BallGamePlayground(this);
 
     this.start();

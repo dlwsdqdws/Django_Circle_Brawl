@@ -107,12 +107,13 @@ class Settings {
     this.$acw_login = this.$settings.find(".ball-game-settings-logo img");
 
     this.root.$ball_game.append(this.$settings);
+  
     this.start();
   }
 
   start() {
     if(this.platform === "ACAPP") {
-        this.getinfo_acapp();
+        this.getinfo_app();
     } else {
         if(this.root.access) {
             this.getinfo_web();
@@ -147,6 +148,7 @@ class Settings {
         this.add_listening_events();
     }
   }
+
 
   rem_user() {
     localStorage.setItem("username", this.username);
