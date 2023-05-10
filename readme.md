@@ -155,7 +155,7 @@ daphne -b 0.0.0.0 -p 5015 app.asgi:application
 1. Redis
     <br>Because the game data, including user data and data generated during the game, is characterized as key-value pairs, only accessed by a single thread, and only requires temporary storage, the game data communication between the front-end and back-end uses Redis as the database. The key represents the room number and the value represents the communication data.
 2. Websocket Bidirectional Communications
-    <p align="center"><img src="showpic/img/websocket.png" alt="wss" width="500" /></p>
+    <p align="center"><img src="showpic/img/websocket.png" alt="wss" height="500" /></p>
 3. Matching System
     <br>The matching system is composed of a message queue, a producer-consumer model, and a matching pool. The matching system communicates with the Game Server using thrift.
     <br>player sends connection request to Game Server -> Game server sends connection channel to player -> player sends add_player request to Game Server -> Game Server sends matching request to Matching Server -> Matching Server sends room_info to Game Server ->Game Server sends room_info to player
