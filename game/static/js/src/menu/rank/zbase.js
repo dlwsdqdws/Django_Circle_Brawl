@@ -91,7 +91,7 @@ class BallGameRank {
     }
 
     modify_page() {
-        // 将this.page_num始终保持在中间, 若this.page_num为3, this.show_page为3则2 3 4, this.show_page为4则2 3 4 5
+        // keep this.page_num always in the middle: say this.page_num is 3, if this.show_page is 3, then 2 3 4, if this.show_page is 4 then 2 3 4 5
         let start = null, end = null;
         if(this.page_num < this.show_page) start = 1, end = this.show_page;
         else if(this.page_num > this.total_page - this.show_page) start = this.total_page - this.show_page + 1, end = this.total_page;
@@ -109,12 +109,13 @@ class BallGameRank {
         if(this.score_player && this.score_player_time && new Date().getTime() - this.score_player_time.getTime() <= 5 * 60 * 1000) return;
         this.$score_table_content.empty();
         $.ajax({
-            url: "https://game.zzqahm.top:20002/menu/rank/getplayers/",
+            url: "https://app4415.acapp.acwing.com.cn/menu/rank/getplayers/",
             type: "GET",
             headers: {
                 "Authorization": "Bearer " + this.root.access,
             },
             success: resp => {
+                console.log(resp)
                 if(resp.result === "success") {
                     this.score_player = resp.players;
                     this.score_player_time = new Date();
@@ -129,23 +130,24 @@ class BallGameRank {
     }
 
     getinfo_rank_time() {
-        this.$time_table_content.empty();
+        this.$score_table_content.empty();
         this.get_page();        
         this.modify_page();  
 
         $.ajax({
-            url: "https://game.zzqahm.top:20002/menu/rank/getplayers/" + this.page_num + "/",
+            url: "https://app4415.acapp.acwing.com.cn/menu/rank/getplayers/" + this.page_num + "/",
             type: "GET",
             headers: {
                 "Authorization": "Bearer " + this.root.access,
             },
             success: resp => {
+                console.log(resp)
                 if(resp.result === "success") {
                     let players = resp.players;
                     for(let i = 0; i < players.length; i++) {
                         let player = players[i];
                         let obj = "<tr><td>" + ((this.page_num - 1) * 10 + i + 1)  + "</td><td><img src=" + player.photo + " alt=\"photo\"  width=\"33px\" height=\"33px\" style=\"border-radius:100%; margin-left:6%\"> " + player.name + "</td><td>" + player.score + "</td></tr>";
-                        this.$time_table_content.append(obj);
+                        this.$score_table_content.append(obj);
                     }
                 }
             }
@@ -154,13 +156,14 @@ class BallGameRank {
 
     get_page() {
         $.ajax({
-            url: "https://game.zzqahm.top:20002/menu/rank/getpage/",
+            url: "https://app4415.acapp.acwing.com.cn/menu/rank/getpage/",
             type: "GET",
             headers: {
                 "Authorization": "Bearer " + this.root.access,
             },
-            async: false,       // 若不加这行赋值在退出方法后无效
+            async: false,     
             success: resp => {
+                console.log(resp)
                 if(resp.result === "success") {
                     this.total_page = resp.page_count;
                 }
@@ -171,7 +174,6 @@ class BallGameRank {
     show() {
         this.getinfo_rank_score();
         this.$rank.show();
-        this.$score_btn.click();
     }
 
     hide() {
