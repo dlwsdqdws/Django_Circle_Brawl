@@ -39,6 +39,7 @@ App-end:
 │   │       ├── dist
 │   │       └── src
 │   │           ├── menu
+│   │           │   └── ranklist
 │   │           ├── settings : manage login, register page
 │   │           └── playground
 │   │               ├── ball_game_object

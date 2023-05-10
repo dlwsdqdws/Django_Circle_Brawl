@@ -1,7 +1,7 @@
-class BallGameMenu{
-    constructor(root){
-        this.root = root;
-        this.$menu = $(`
+class BallGameMenu {
+  constructor(root) {
+    this.root = root;
+    this.$menu = $(`
                 <div class = "ball-game-menu">
                     <div class = "ball-game-menu-field">
                         <div class = "ball-game-menu-field-item ball-game-menu-field-item-single-mode">
@@ -10,47 +10,58 @@ class BallGameMenu{
                         <div class = "ball-game-menu-field-item ball-game-menu-field-item-multi-mode">
                             Multiple
                         </div><br>
+                        <div class = "ball-game-menu-field-item ball-game-menu-field-item-rank">
+                            Ranklist
+                        </div><br>
                         <div class = "ball-game-menu-field-item ball-game-menu-field-item-settings">
-                            Settings
+                            Logout
                         </div>
                     </div>
                 </div>
             `);
-        this.$menu.hide();
-        this.root.$ball_game.append(this.$menu);
-        this.$single_mode = this.$menu.find('.ball-game-menu-field-item-single-mode');
-        this.$multi_mode = this.$menu.find('.ball-game-menu-field-item-multi-mode');
-        this.$settings = this.$menu.find('.ball-game-menu-field-item-settings');
+    this.$menu.hide();
+    this.root.$ball_game.append(this.$menu);
+    this.$single_mode = this.$menu.find(
+      ".ball-game-menu-field-item-single-mode"
+    );
+    this.$multi_mode = this.$menu.find(".ball-game-menu-field-item-multi-mode");
+    this.$rank = this.$menu.find(".ball-game-menu-field-item-rank");
+    this.$settings = this.$menu.find(".ball-game-menu-field-item-settings");
 
-        this.start();
-    }
+    this.start();
+  }
 
-    start(){
-        this.add_listening_events();
-    }
+  start() {
+    this.add_listening_events();
+  }
 
-    add_listening_events(){
-        let outer = this;
-        this.$single_mode.click(function(){
-            outer.hide();
-            outer.root.playground.show("single mode");
-        });
-        this.$multi_mode.click(function(){
-            outer.hide();
-            outer.root.playground.show("multi mode");
-        });
-        this.$settings.click(function(){
-            outer.root.settings.logout_on_remote();
-        });
-    }
+  add_listening_events() {
+    let outer = this;
+    this.$single_mode.click(function () {
+      outer.hide();
+      outer.root.playground.show("single mode");
+    });
+    this.$multi_mode.click(function () {
+      outer.hide();
+      outer.root.playground.show("multi mode");
+    });
+    this.$rank.click(() => {
+        console.log("rank")
+      this.hide();
+      this.root.rank.show();
+  });
+    this.$settings.click(function () {
+      outer.root.settings.logout_on_remote();
+    });
+  }
 
-    show(){
-        // show menu page
-        this.$menu.show();
-    }
+  show() {
+    // show menu page
+    this.$menu.show();
+  }
 
-    hide(){
-        // hide menu page
-        this.$menu.hide();
-    }
+  hide() {
+    // hide menu page
+    this.$menu.hide();
+  }
 }

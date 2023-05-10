@@ -11,7 +11,7 @@ class BallGameMenu {
                             Multiple
                         </div><br>
                         <div class = "ball-game-menu-field-item ball-game-menu-field-item-rank">
-                            Logout
+                            Ranklist
                         </div><br>
                         <div class = "ball-game-menu-field-item ball-game-menu-field-item-settings">
                             Logout
@@ -25,7 +25,7 @@ class BallGameMenu {
       ".ball-game-menu-field-item-single-mode"
     );
     this.$multi_mode = this.$menu.find(".ball-game-menu-field-item-multi-mode");
-    this.$rank = this.$menu.find(".ac-game-menu-field-item-rank");
+    this.$rank = this.$menu.find(".ball-game-menu-field-item-rank");
     this.$settings = this.$menu.find(".ball-game-menu-field-item-settings");
 
     this.start();
@@ -46,6 +46,7 @@ class BallGameMenu {
       outer.root.playground.show("multi mode");
     });
     this.$rank.click(() => {
+        console.log("rank")
       this.hide();
       this.root.rank.show();
   });

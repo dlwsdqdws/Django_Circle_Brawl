@@ -211,6 +211,7 @@
 .pagination {
     position: relative;
     left: 41%;
+    display: flex;
 }
 
 .ball-game-return {
@@ -218,7 +219,7 @@
     top: 2.5%;
     left: 2.5%;
     color: white;
-    width: 5vw;
+    width: 9vw;
     height: 5vh;
     font-size: 3vh;
     cursor: pointer;
