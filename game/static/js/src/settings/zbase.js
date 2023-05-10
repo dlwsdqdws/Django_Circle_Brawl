@@ -111,46 +111,40 @@ class Settings {
   }
 
   start() {
-    if (this.platform === "ACAPP") {
-      this.getinfo_app();
+    if(this.platform === "ACAPP") {
+        this.getinfo_acapp();
     } else {
-      if (this.root.access) {
-        this.getinfo_web();
-        this.refresh_jwt_token();
-      } else if (localStorage.getItem("username") !== null) {
-        this.get_user();
-        if (
-          new Date().getTime() - this.root.refresh_expires.getTime() >=
-          12 * 24 * 60 * 60 * 1000 - 10 * 60 * 1000
-        ) {
-          // valid for 14 days
-          localStorage.clear();
-          this.login();
-          return;
-        } else if (
-          new Date().getTime() - this.root.access_expires.getTime() >=
-          4.5 * 60 * 1000
-        ) {
-          $.ajax({
-            url: "https://app4415.acapp.acwing.com.cn/settings/token/refresh/",
-            type: "post",
-            data: {
-              refresh: this.root.refresh,
-            },
-            success: (resp) => {
-              this.root.access = resp.access;
-              localStorage.setItem("access", this.root.access);
-              localStorage.setItem("access_expires", new Date());
-            },
-          });
+        if(this.root.access) {
+            this.getinfo_web();
+            this.refresh_jwt_token();
+        } else if(localStorage.getItem("username") !== null) {
+            this.get_user();
+            if(new Date().getTime() - this.root.refresh_expires.getTime() >= 12 * 24 * 60 * 60 * 1000 - 10 * 60 * 1000) {
+                // valid for 14 days
+                localStorage.clear();
+                this.login();
+                return;
+            } else if(new Date().getTime() - this.root.access_expires.getTime() >= 4.5 * 60 * 1000) {
+                $.ajax({
+                    url: "https://app4415.acapp.acwing.com.cn/settings/token/refresh/",
+                    type: "post",
+                    data: {
+                        refresh: this.root.refresh,
+                    },
+                    success: resp => {
+                        this.root.access = resp.access;
+                        localStorage.setItem("access", this.root.access);
+                        localStorage.setItem("access_expires", new Date());
+                    }
+                });
+            }
+            this.refresh_jwt_token();
+            this.hide();
+            this.root.menu.show();
+        } else {
+            this.login();
         }
-        this.refresh_jwt_token();
-        this.hide();
-        this.root.menu.show();
-      } else {
-        this.login();
-      }
-      this.add_listening_events();
+        this.add_listening_events();
     }
   }
 
